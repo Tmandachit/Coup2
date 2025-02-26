@@ -1,10 +1,10 @@
 const express = require("express");
-const db = require("./db"); // Import MySQL connection
+const db = require("./db");
 const cors = require("cors");
 
 const app = express();
-app.use(express.json()); // Middleware to parse JSON
-app.use(cors()); // Enable cross-origin requests
+app.use(express.json());
+app.use(cors());
 
 // add to db -> users table in users_db
 app.post("/register", async (req, res) => {
