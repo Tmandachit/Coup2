@@ -23,7 +23,7 @@ const Register = () => {
     try {
       const response = await axios.post("http://localhost:5000/register", formData);
       alert(response.data.message);
-      navigate("/");
+      navigate("/login");
     } catch (error) {
       alert("Error: " + (error.response?.data?.message || "Something went wrong"));
     }

@@ -6,7 +6,6 @@ const pool = mysql.createPool({
   password: 'CoupGame',
   database: 'users_db',
   waitForConnections: true,
-  queueLimit: 0,
 });
 
 const db = pool.promise();

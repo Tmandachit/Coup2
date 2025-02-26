@@ -1,6 +1,5 @@
-/* General page styles */
 body {
-  background-color: #e3f2fd; /* Light blue-gray background */
+  background-color: #e3f2fd;
   font-family: Arial, sans-serif;
   display: flex;
   justify-content: center;
@@ -9,18 +8,24 @@ body {
   margin: 0;
 }
 
-h1 {
-    color: lightseagreen;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: -25px;
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
-/* Form container */
-.register-form {
+h1 {
+  color: #0b4081;
+  font-family: "Revalia", sans-serif;
+  font-size: 80px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+form {
   width: 350px;
-  padding: 30px;
+  padding: 25px;
   background: #bbdefb;
   border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
@@ -30,26 +35,26 @@ h1 {
   text-align: center;
 }
 
-.register-input {
-    width: 90%;
-    padding: 12px;
-    border: 1px solid #90caf9;
-    border-radius: 6px;
-    font-size: 16px;
-    background-color: white;
-    color: black;
-    text-align: left;
-    transition: all 0.3s ease;
-  }
-  
+input {
+  width: 90%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #90caf9;
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: white;
+  color: black;
+  text-align: left;
+  transition: all 0.3s ease;
+}
 
-.register-input:focus {
+input:focus {
   border-color: #1e88e5;
   outline: none;
   box-shadow: 0px 0px 5px rgba(30, 136, 229, 0.5);
 }
 
-.register-button {
+button {
   width: 90%;
   padding: 12px;
   background-color: #1e88e5;
@@ -59,15 +64,33 @@ h1 {
   font-size: 18px;
   cursor: pointer;
   margin-top: 10px;
+  transition: background-color 0.3s ease;
 }
 
-.register-button:hover {
+button:hover {
   background-color: #1565c0;
 }
 
-/* Responsive design */
+.create-account-button {
+  width: 90%;
+  padding: 12px;
+  background-color: #0b4081;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 18px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.create-account-button:hover {
+  background-color: #0b2061;
+}
+
+/* Responsive Design */
 @media (max-width: 400px) {
-  .register-form {
-    width: 90%;
+  form {
+      width: 90%;
   }
 }
