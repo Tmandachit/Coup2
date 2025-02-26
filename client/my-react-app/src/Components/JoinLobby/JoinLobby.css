@@ -1,0 +1,186 @@
+/* General Styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #1e1e2e;
+  color: white;
+  text-align: center;
+}
+
+/* Home & Join Lobby Page Containers */
+.homeContainer, 
+.joinContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 20px;
+}
+
+/* Header Styling */
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  color: #f39c12;
+}
+
+p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  opacity: 0.8;
+}
+
+/* Image Styling */
+img {
+  width: 100px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+/* 🌟 Enhanced Buttons */
+.home, 
+.joinButton {
+  display: inline-block;
+  padding: 14px 30px;
+  background: linear-gradient(45deg, #3498db, #2980b9);
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 10px;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.home:hover, 
+.joinButton:hover {
+  background: linear-gradient(45deg, #2980b9, #1e73be);
+  transform: scale(1.05);
+}
+
+.home:active, 
+.joinButton:active {
+  transform: scale(0.95);
+}
+
+/* 🌟 Input Fields */
+.lobbyInput, 
+.usernameInput {
+  width: 320px;
+  padding: 14px;
+  font-size: 1rem;
+  border: 2px solid #3d3d50;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  outline: none;
+  background-color: #2c2c3a;
+  color: white;
+  text-align: center;
+  transition: 0.3s ease-in-out;
+  box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.1);
+}
+
+/* 🌟 Input Field Focus Effect */
+.lobbyInput:focus, 
+.usernameInput:focus {
+  border-color: #f39c12;
+  box-shadow: 0 0 12px rgba(243, 156, 18, 0.7);
+}
+
+/* 📦 Styled Join Box */
+.joinBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 25px;
+  border-radius: 12px;
+  width: 380px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* 👥 Lobby Members List */
+.lobbyMembers {
+  margin-top: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 8px;
+  width: 350px;
+  text-align: left;
+}
+
+.lobbyMembers h3 {
+  margin-bottom: 10px;
+}
+
+.lobbyMembers ul {
+  list-style: none;
+  padding: 0;
+}
+
+.lobbyMembers li {
+  background: rgba(255, 255, 255, 0.1);
+  margin: 5px 0;
+  padding: 8px;
+  border-radius: 5px;
+}
+
+/* 🚨 Error Message */
+.error {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+/* 🔳 Footer Styling */
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f8f9fa;
+  padding: 10px 20px;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer form {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.footer label {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.footer input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  flex: 1;
+  min-width: 150px;
+}
+
+.footer button {
+  padding: 8px 12px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.footer button:hover {
+  background-color: #0056b3;
+}
