@@ -1,6 +1,7 @@
 /* Global Styles */
 body {
   background-color: #e3f2fd;
+  background-size: cover;
   font-family: Arial, sans-serif;
   display: flex;
   justify-content: center;

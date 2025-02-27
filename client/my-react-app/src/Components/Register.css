@@ -8,7 +8,7 @@ body {
   margin: 0;
 }
 
-.login-container {
+.register-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -71,7 +71,7 @@ button:hover {
   background-color: #1565c0;
 }
 
-.create-account-button {
+.back-to-login-button {
   width: 90%;
   padding: 12px;
   background-color: #0b4081;
@@ -84,7 +84,7 @@ button:hover {
   transition: background-color 0.3s ease;
 }
 
-.create-account-button:hover {
+.back-to-login-button:hover {
   background-color: #0b2061;
 }
 

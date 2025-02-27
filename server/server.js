@@ -18,7 +18,6 @@ app.post("/register", async (req, res) => {
   try {
       const usersRef = collection(db, "players");
 
-      // 🔹 Check if username already exists
       const usernameQuery = query(usersRef, where("username", "==", username));
       const usernameSnapshot = await getDocs(usernameQuery);
 
@@ -26,7 +25,6 @@ app.post("/register", async (req, res) => {
           return res.status(400).json({ message: "Username already taken" });
       }
 
-      // 🔹 Check if email already exists
       const emailQuery = query(usersRef, where("email", "==", email));
       const emailSnapshot = await getDocs(emailQuery);
 
@@ -34,7 +32,6 @@ app.post("/register", async (req, res) => {
           return res.status(400).json({ message: "Email is already registered" });
       }
 
-      // 🔹 Save the new user in Firestore
       await setDoc(doc(db, "players", username), {
           firstName,
           lastName,

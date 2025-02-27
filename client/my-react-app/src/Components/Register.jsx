@@ -24,15 +24,15 @@ const Register = () => {
     try {
       const response = await axios.post("http://localhost:5000/register", formData);
       alert(response.data.message);
-      navigate("/dashboard");
+      navigate("/Login");
     } catch (error) {
       alert("Error: " + (error.response?.data?.message || "Something went wrong"));
     }
   };
 
   return (
-    <>      
-    <h1>Create an Account</h1>
+    <div className="register-container">      
+    <h1>Register</h1>
     <form className="register-form" onSubmit={handleSubmit}>
       <input
         className="register-input"
@@ -80,8 +80,9 @@ const Register = () => {
       />
 
       <button className="register-button" type="submit">Register Account</button>
+      <button className="back-to-login-button" type="button" onClick={() => navigate("/login")}>Back to Login</button>
     </form>
-    </>
+    </div>
   );
 };
 
