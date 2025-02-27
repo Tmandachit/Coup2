@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Register.css";
+import "./Dashboard/Dashboard"
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -23,15 +24,15 @@ const Register = () => {
     try {
       const response = await axios.post("http://localhost:5000/register", formData);
       alert(response.data.message);
-      navigate("/");
+      navigate("/Login");
     } catch (error) {
       alert("Error: " + (error.response?.data?.message || "Something went wrong"));
     }
   };
 
   return (
-    <>      
-    <h1>Create an Account</h1>
+    <div className="register-container">      
+    <h1>Register</h1>
     <form className="register-form" onSubmit={handleSubmit}>
       <input
         className="register-input"
@@ -79,8 +80,9 @@ const Register = () => {
       />
 
       <button className="register-button" type="submit">Register Account</button>
+      <button className="back-to-login-button" type="button" onClick={() => navigate("/login")}>Back to Login</button>
     </form>
-    </>
+    </div>
   );
 };
 
