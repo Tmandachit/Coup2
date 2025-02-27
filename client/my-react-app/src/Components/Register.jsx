@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Register.css";
+import "./Dashboard/Dashboard"
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -23,7 +24,7 @@ const Register = () => {
     try {
       const response = await axios.post("http://localhost:5000/register", formData);
       alert(response.data.message);
-      navigate("/login");
+      navigate("/dashboard");
     } catch (error) {
       alert("Error: " + (error.response?.data?.message || "Something went wrong"));
     }

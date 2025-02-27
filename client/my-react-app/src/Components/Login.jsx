@@ -15,19 +15,19 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/login", formData);
+        const response = await axios.post("http://localhost:5000/login", formData);
 
-      if (response.data.success) {
-        alert("Login successful!");
-        navigate("/dashboard");
-      } else {
-        alert("Invalid username or password.");
-      }
+        if (response.status === 200) {
+            alert("Login successful!");
+            navigate("/dashboard");
+        } else {
+            alert(response.data.message || "Invalid username or password.");
+        }
     } catch (error) {
-      alert("Error: " + (error.response?.data?.message || "Something went wrong"));
-      console.error("Login error:", error);
+        alert("Error: " + (error.response?.data?.message || "Something went wrong"));
+        console.error("Login error:", error);
     }
-  };
+};
 
   return (
     <div className="login-container">

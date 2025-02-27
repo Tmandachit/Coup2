@@ -1,54 +1,86 @@
 const express = require("express");
-const db = require("./db");
 const cors = require("cors");
+const { db } = require("./firebase"); 
+const { doc, getDoc, setDoc, collection, query, where, getDocs } = require("firebase/firestore");
 
 const app = express();
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 
-// add to db -> users table in users_db
+
 app.post("/register", async (req, res) => {
-    const { firstName, lastName, email, username, password } = req.body;
-  
-    if (!firstName || !lastName || !email || !username || !password) {
+  const { firstName, lastName, email, username, password } = req.body;
+
+  if (!firstName || !lastName || !email || !username || !password) {
       return res.status(400).json({ message: "All fields are required" });
-    }
-  
-    try {
-      const sql = "INSERT INTO users (first_name, last_name, email, username, password) VALUES (?, ?, ?, ?, ?)";
-      await db.query(sql, [firstName, lastName, email, username, password]);
+  }
+
+  try {
+      const usersRef = collection(db, "players");
+
+      // 🔹 Check if username already exists
+      const usernameQuery = query(usersRef, where("username", "==", username));
+      const usernameSnapshot = await getDocs(usernameQuery);
+
+      if (!usernameSnapshot.empty) {
+          return res.status(400).json({ message: "Username already taken" });
+      }
+
+      // 🔹 Check if email already exists
+      const emailQuery = query(usersRef, where("email", "==", email));
+      const emailSnapshot = await getDocs(emailQuery);
+
+      if (!emailSnapshot.empty) {
+          return res.status(400).json({ message: "Email is already registered" });
+      }
+
+      // 🔹 Save the new user in Firestore
+      await setDoc(doc(db, "players", username), {
+          firstName,
+          lastName,
+          email,
+          username,
+          password,
+          createdAt: new Date().toISOString(),
+      });
+
       res.status(201).json({ message: "User registered successfully!" });
-    } catch (error) {
-      console.error("Database Insert Error:", error);
-      res.status(500).json({ message: "Database error" });
-    }
-  });
 
-  app.post("/login", async (req, res) => {
-    const { username, password } = req.body;
-
-    if (!username || !password) {
-        return res.status(400).json({ message: "Username and password are required" });
-    }
-
-    try {
-        const sql = "SELECT * FROM users WHERE username = ? AND password = ?";
-        const [results] = await db.query(sql, [username, password]);
-
-        if (results.length > 0) {
-            res.json({ success: true, message: "Login successful" });
-        } else {
-            res.json({ success: false, message: "Invalid username or password" });
-        }
-    } catch (error) {
-        console.error("Database Query Error:", error);
-        res.status(500).json({ message: "Database error" });
-    }
+  } catch (error) {
+      console.error("Error saving user to Firestore:", error);
+      res.status(500).json({ message: "Failed to register user" });
+  }
 });
 
-  
 
-// Start server
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+      return res.status(400).json({ message: "Username and password are required" });
+  }
+
+  try {
+      const userRef = doc(db, "players", username);
+      const userDoc = await getDoc(userRef);
+
+      if (!userDoc.exists()) {
+          return res.status(400).json({ message: "User not found" });
+      }
+
+      const userData = userDoc.data();
+
+      if (userData.password !== password) {
+          return res.status(400).json({ message: "Invalid password" });
+      }
+
+      res.status(200).json({ message: "Login successful!", user: userData });
+
+  } catch (error) {
+      console.error("Login error:", error);
+      res.status(500).json({ message: "Internal server error" });
+  }
 });
+
+
+app.listen(5000, () => console.log("Server running on port 5000"));
