@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 import axios from "axios";
 import "./Login.css";
-import "./Dashboard/Dashboard.jsx"
+import "../Dashboard/Dashboard"
 
 const Login = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
@@ -15,11 +15,11 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const response = await axios.post("http://localhost:5000/login", formData);
+        const response = await axios.post("http://localhost:5001/login", formData);
 
         if (response.status === 200) {
             alert("Login successful!");
-            navigate("/dashboard");
+            navigate("/home");
         } else {
             alert(response.data.message || "Invalid username or password.");
         }

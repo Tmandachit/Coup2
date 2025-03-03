@@ -14,7 +14,7 @@ const server = createServer(app);                       // Create an HTTP server
 // Initialize Socket.IO server with CORS configuration
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:5174'],                // Allowed client origin for socket connections
+    origin: ['http://localhost:5173'],                // Allowed client origin for socket connections
     methods: ['GET', 'POST'],                         // Allowed HTTP methods
     credentials: true,                                // Allow credentials (cookies, headers, etc.)
   },
@@ -23,12 +23,13 @@ const io = new Server(server, {
 // Middleware setup for CORS and JSON parsing
 app.use(
   cors({
-    origin: 'http://localhost:5174',                  // Allowed client origin for HTTP requests
+    origin: 'http://localhost:5173',                  // Allowed client origin for HTTP requests
     methods: ['GET', 'POST'],                         // Allowed HTTP methods
     credentials: true,                                // Allow credentials
   })
 );
 app.use(express.json());                              // Middleware to parse incoming JSON requests
+
 // Jillian stuff 
 app.post("/register", async (req, res) => {
   const { firstName, lastName, email, username, password } = req.body;
@@ -133,30 +134,6 @@ app.get('/lobby/:lobbyCode/players', (req, res) => {
     res.json({ players: lobbies[lobbyCode] });
   } else {
     res.status(404).json({ error: 'Lobby not found' });
-  }
-});
-
-// RESTful API route for user registration
-app.post('/register', async (req, res) => {
-  const { firstName, lastName, email, username, password } = req.body;
-
-  // Validate that all required fields are provided
-  if (!firstName || !lastName || !email || !username || !password) {
-    return res.status(400).json({ message: 'All fields are required' });
-  }
-
-  try {
-    // Initialize database connection
-    const connection = await initDb();
-    // SQL statement to insert a new user into the users table
-    const sql =
-      'INSERT INTO users (first_name, last_name, email, username, password) VALUES (?, ?, ?, ?, ?)';
-    // Execute the SQL query with the provided user data
-    await connection.execute(sql, [firstName, lastName, email, username, password]);
-    res.status(201).json({ message: 'User registered successfully!' });
-  } catch (error) {
-    console.error('Database Insert Error:', error);
-    res.status(500).json({ message: 'Database error' });  // Return a 500 status if an error occurs during registration
   }
 });
 
