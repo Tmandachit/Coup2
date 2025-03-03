@@ -7,15 +7,15 @@ import Lobby from "./Components/Lobby/Lobby";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/Home" element={<HomePage />} />
-        <Route path="/Lobby" element={<Lobby />} />
-        <Route path="/Join" element={<JoinLobby />} />
-      </Routes>
-    </Router>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/Home" element={<HomePage />} />
+          <Route path="/lobby" element={<Lobby />} />
+          <Route path="/Join" element={<JoinLobby />} />
+        </Routes>
+      </Router>
   );
 }
 

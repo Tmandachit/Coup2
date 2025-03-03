@@ -1,7 +1,7 @@
 // JoinLobby.js
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useSocket } from '../../SocketProvider';
+import useSocket from '../../Socket/useSocket';
 import './JoinLobby.css';
 
 function JoinLobby() {
@@ -22,9 +22,9 @@ function JoinLobby() {
         if (username.trim() && lobbyCode.trim().length === 6) {
             socket.emit('join-lobby', { username, lobby: lobbyCode }, (response) => {
                 if (response.status === 'ok') {
-                    navigate(`/lobby/${lobbyCode}`, { state: { username } });
+                  navigate(`/lobby?lobby=${lobbyCode}`, { state: { username } });
                 } else {
-                    setError(response.message || 'Failed to join the lobby.');
+                  setError(response.message || 'Failed to join the lobby.');
                 }
             });
         } else {
