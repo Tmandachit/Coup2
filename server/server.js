@@ -16,9 +16,9 @@ const server = createServer(app);
 // Initialize Socket.IO server with CORS configuration
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:5173'],               
-    methods: ['GET', 'POST'],                        
-    credentials: true,                               
+    origin: ['http://localhost:5173'],                // Allowed client origin for socket connections
+    methods: ['GET', 'POST'],                         // Allowed HTTP methods
+    credentials: true,                                // Allow credentials (cookies, headers, etc.)
   },
 });
 
@@ -41,6 +41,7 @@ function generateSixDigitCode() {
 }
 
 // User Registration
+
 app.post("/register", async (req, res) => {
   const { firstName, lastName, email, username, password } = req.body;
 
@@ -215,7 +216,8 @@ app.get('/lobby/:lobbyCode/players', (req, res) => {
   }
 });
 
-// Socket.IO connection handler
+
+// Socket.IO connection handler for real-time events
 io.on('connection', (socket) => {
   console.log(`User connected: ${socket.id}`);
 
