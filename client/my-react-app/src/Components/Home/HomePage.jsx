@@ -47,7 +47,6 @@ const HomePage = () => {
     <div className="homeContainer">
       <h1>Welcome to Coup</h1>
       <p>A game of deduction and deception</p>
-      <img src={jillian} alt="chicken-leg" />
 
       {/* Player name input */}
       <div>

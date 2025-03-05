@@ -4,6 +4,7 @@ import Register from "./Components/Register/Register";
 import HomePage from "./Components/Home/HomePage";
 import JoinLobby from "./Components/JoinLobby/JoinLobby";
 import Lobby from "./Components/Lobby/Lobby"; 
+import "./index.css"
 
 function App() {
   return (
