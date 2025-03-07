@@ -5,15 +5,14 @@ import axios from "axios";
 import "./Lobby.css";
 
 const Lobby = () => {
-  // Extract lobby code from the query string
   const [searchParams] = useSearchParams();
-  const lobbyCode = searchParams.get('lobby');
+  const lobbyCode = searchParams.get('lobby'); // Extract lobby code from URL
   const socket = useSocket();
-
-
-  // State to hold the list of players
-  const [players, setPlayers] = useState([]);
+  const navigate = useNavigate();
   
+  const [players, setPlayers] = useState([]);
+  const [gameStarted, setGameStarted] = useState(false);
+
   useEffect(() => {
     if (lobbyCode) {
       fetch(`http://localhost:5001/lobby/${lobbyCode}/players`)
@@ -32,30 +31,45 @@ const Lobby = () => {
 
   useEffect(() => {
     socket.on('lobby-update', (updatedPlayers) => {
-      console.log("Received lobby update:", updatedPlayers);
       setPlayers(updatedPlayers);
     });
-    
+
+    socket.on('game-started', () => {
+      setGameStarted(true);
+      navigate(`/game?lobby=${lobbyCode}`);
+    });
+
     return () => {
       socket.off('lobby-update');
+      socket.off('game-started');
     };
-  }, [socket]);
-  
+  }, [socket, navigate, lobbyCode]);
+
+  // Function to start the game
+  const handleStartGame = () => {
+    socket.emit('start-game', { lobbyCode });
+  };
 
   return (
     <div className="lobbyContainer">
       <div className="lobbyContent">
-        <h1>Lobby Code: {lobbyCode}</h1>
+        <h1 className="lobbyCode">Lobby Code: {lobbyCode}</h1>
         <h2>Players:</h2>
         <ul className="lobbyList">
           {players.map((player, index) => (
             <li key={index}>{player}</li>
           ))}
         </ul>
+        <button 
+          className="startGameButton" 
+          onClick={handleStartGame} 
+          disabled={gameStarted}
+        >
+          {gameStarted ? "Game Starting..." : "Start Game"}
+        </button>
       </div>
     </div>
   );
-  
 };
 
 export default Lobby;
