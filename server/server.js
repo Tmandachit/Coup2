@@ -14,7 +14,7 @@ const server = createServer(app);                       // Create an HTTP server
 // Initialize Socket.IO server with CORS configuration
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:5173'],                // Allowed client origin for socket connections
+    origin: ['http://localhost:5174'],                // Allowed client origin for socket connections
     methods: ['GET', 'POST'],                         // Allowed HTTP methods
     credentials: true,                                // Allow credentials (cookies, headers, etc.)
   },
@@ -23,7 +23,7 @@ const io = new Server(server, {
 // Middleware setup for CORS and JSON parsing
 app.use(
   cors({
-    origin: 'http://localhost:5173',                  // Allowed client origin for HTTP requests
+    origin: 'http://localhost:5174',                  // Allowed client origin for HTTP requests
     methods: ['GET', 'POST'],                         // Allowed HTTP methods
     credentials: true,                                // Allow credentials
   })

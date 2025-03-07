@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import useSocket from '../../Socket/useSocket';
+import axios from "axios";
+import "./Lobby.css";
 
 const Lobby = () => {
   // Extract lobby code from the query string
@@ -11,7 +13,7 @@ const Lobby = () => {
 
   // State to hold the list of players
   const [players, setPlayers] = useState([]);
-
+  
   useEffect(() => {
     if (lobbyCode) {
       fetch(`http://localhost:5001/lobby/${lobbyCode}/players`)
@@ -43,11 +45,11 @@ const Lobby = () => {
   return (
     <div className="lobbyContainer">
       <div className="lobbyContent">
-        <h1 className="lobbyCode">Lobby Code: {lobbyCode}</h1>
-        <h2 className='lobbyPlayerTitle'>Players:</h2>
+        <h1>Lobby Code: {lobbyCode}</h1>
+        <h2>Players:</h2>
         <ul className="lobbyList">
           {players.map((player, index) => (
-            <li key={index} className="lobbyPlayer">{player}</li>
+            <li key={index}>{player}</li>
           ))}
         </ul>
       </div>
