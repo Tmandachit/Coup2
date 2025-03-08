@@ -7,7 +7,6 @@ const Game = () => {
   const [searchParams] = useSearchParams();
   const lobbyCode = searchParams.get('lobby');
   const socket = useSocket();
-  const [players, setPlayers] = useState([]);
 
   useEffect(() => {
     socket.emit('join-game', { lobbyCode });

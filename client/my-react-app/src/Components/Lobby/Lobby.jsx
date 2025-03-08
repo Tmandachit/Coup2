@@ -13,6 +13,8 @@ const Lobby = () => {
   const [players, setPlayers] = useState([]);
   const [gameStarted, setGameStarted] = useState(false);
 
+  const userName = sessionStorage.getItem("userName");
+
   useEffect(() => {
     if (lobbyCode) {
       fetch(`http://localhost:5001/lobby/${lobbyCode}/players`)
@@ -47,7 +49,8 @@ const Lobby = () => {
 
   // Function to start the game
   const handleStartGame = () => {
-    socket.emit('start-game', { lobbyCode });
+    // socket.emit('start-game', { lobbyCode });
+    navigate('/game')
   };
 
   return (

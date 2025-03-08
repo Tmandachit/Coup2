@@ -18,6 +18,10 @@ const Login = () => {
 
         if (response.status === 200) {
             alert("Login successful!");
+
+            sessionStorage.setItem("userId", response.data.userId);
+            sessionStorage.setItem("firstName", response.data.firstName);
+
             navigate("/home");
         } else {
             alert(response.data.message || "Invalid username or password.");

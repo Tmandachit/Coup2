@@ -14,7 +14,7 @@ const server = createServer(app);
 // Initialize Socket.IO server with CORS configuration
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:5173'],               
+    origin: ['http://localhost:5174'],               
     methods: ['GET', 'POST'],                        
     credentials: true,                               
   },
@@ -22,7 +22,7 @@ const io = new Server(server, {
 
 // Middleware setup for CORS and JSON parsing
 app.use(cors({
-  origin: 'http://localhost:5173',                
+  origin: 'http://localhost:5174',                
   methods: ['GET', 'POST'],                        
   credentials: true,                                
 }));
@@ -38,7 +38,7 @@ function generateSixDigitCode() {
   return Math.floor(100000 + Math.random() * 900000).toString(); 
 }
 
-// ✅ User Registration
+// User Registration
 app.post("/register", async (req, res) => {
   const { firstName, lastName, email, username, password } = req.body;
 
@@ -80,7 +80,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
-// ✅ User Login
+// User Login
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
@@ -102,7 +102,7 @@ app.post("/login", async (req, res) => {
           return res.status(400).json({ message: "Invalid password" });
       }
 
-      res.status(200).json({ message: "Login successful!", user: userData });
+      res.status(200).json({ message: "Login successful!", user: userData, userId: username, firstName: userData.firstName });
 
   } catch (error) {
       console.error("Login error:", error);
@@ -110,7 +110,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// ✅ Create a new lobby
+// Create a new lobby
 app.get('/createlobby', (req, res) => {
   let code = '';
 
@@ -123,7 +123,7 @@ app.get('/createlobby', (req, res) => {
   res.json({ lobby: code });
 });
 
-// ✅ Fetch players in a lobby
+// Fetch players in a lobby
 app.get('/lobby/:lobbyCode/players', (req, res) => {
   const { lobbyCode } = req.params;
   if (lobbies[lobbyCode]) {
@@ -133,11 +133,11 @@ app.get('/lobby/:lobbyCode/players', (req, res) => {
   }
 });
 
-// ✅ Socket.IO connection handler
+// Socket.IO connection handler
 io.on('connection', (socket) => {
   console.log(`User connected: ${socket.id}`);
 
-  // 🎮 Handle joining a lobby
+  // Handle joining a lobby
   socket.on('join-lobby', ({ username, lobby }, callback) => {
     if (!lobbies[lobby]) {
       console.error(`Lobby ${lobby} does not exist.`);
@@ -162,7 +162,7 @@ io.on('connection', (socket) => {
     }
   });
 
-  // 🎮 Handle starting the game
+  // Handle starting the game
   socket.on('start-game', ({ lobbyCode }) => {
     if (!lobbies[lobbyCode]) {
       console.error(`Attempt to start a non-existent lobby: ${lobbyCode}`);
@@ -184,7 +184,7 @@ io.on('connection', (socket) => {
     io.to(lobbyCode).emit('game-started', { lobbyCode });
   });
 
-  // ❌ Handle player disconnection
+  // Handle player disconnection
   socket.on('disconnecting', () => {
     console.log(`User disconnecting: ${socket.id}`);
     const user = userSockets[socket.id];
@@ -208,7 +208,7 @@ io.on('connection', (socket) => {
   });
 });
 
-// ✅ Serve React Frontend
+// Serve React Frontend
 const clientBuildPath = path.join(__dirname, '../client/my-react-app/');
 app.use(express.static(clientBuildPath));
 
@@ -216,7 +216,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(clientBuildPath, 'index.html'));
 });
 
-// ✅ Start the server
+// Start the server
 const PORT = process.env.PORT || 5001;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
