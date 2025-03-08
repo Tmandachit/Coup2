@@ -5,6 +5,7 @@ import Dashboard from "./Components/Dashboard/Dashboard"
 import HomePage from "./Components/Home/HomePage";
 import JoinLobby from "./Components/JoinLobby/JoinLobby";
 import Lobby from "./Components/Lobby/Lobby"; 
+import Gameboard from "./Components/Gameboard/Gameboard";
 
 function App() {
   return (
@@ -16,7 +17,8 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/Home" element={<HomePage />} />
         <Route path="/lobby" element={<Lobby />} />
-        <Route path="/Join" element={<JoinLobby />} />      
+        <Route path="/Join" element={<JoinLobby />} />
+        <Route path="/Gameboard" element={<Gameboard />} />      
       </Routes>
     </Router>
   );
