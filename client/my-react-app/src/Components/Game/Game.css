@@ -16,7 +16,7 @@
   }
   
   .small-button:hover {
-    background-color: #ddd;
+    background-color: #2d4c61;
   }  
 
   .event-log {
@@ -25,18 +25,19 @@
     right: 10px;
     width: 250px;
     height: 400px;
-    background-color: #457595;
+    background-color: #A3CAE9;
     color: white;
     padding: 10px;
     border-radius: 5px;
-    border: 3px solid #213f7a; 
+    border: 3px solid #6E9FC1; 
     overflow-y: auto;
   }
   
   .event-log h2 {
     font-size: 16px;
     margin-bottom: 8px;
-    border-bottom: 1px solid #fbfbfb;
+    border-bottom: 1px solid #6E9FC1;
+    color: #395A7F;
     padding-bottom: 5px;
   }
   
