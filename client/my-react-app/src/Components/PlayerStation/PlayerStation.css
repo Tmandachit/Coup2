@@ -1,0 +1,14 @@
+.station {
+    display: flex;
+    flex-direction: space-between;
+    align-items: center;
+}
+
+/* make sure cards are displayed in a row */
+.card-container {
+    display: flex;
+    flex-direction: space-between;
+    align-items: center;
+    text-align: center;
+    margin-top: 20px;
+}
