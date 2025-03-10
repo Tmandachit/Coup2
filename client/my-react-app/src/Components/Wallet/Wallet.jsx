@@ -7,7 +7,7 @@ export default function Wallet({ coins }) {
             <h2 className="wallet-title">Wallet</h2>
             <div className="coin-grid">
                 {Array.from({ length: coins }).map((_, index) => (
-                    <img key={index} src="/Assets/coin.png" alt="Coin" className="coin-image" />
+                    <img key={index} src="../Assets/coin.png" alt="Coin" className="coin-image" />
                 ))}
             </div>
         </div>
