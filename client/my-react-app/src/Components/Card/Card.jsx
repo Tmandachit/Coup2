@@ -5,8 +5,8 @@ export default function Card({ role, isRevealed}) {
 
     // determine image path
     const imagePath = isRevealed 
-        ? `/Assets/${role}.png`   // show card face if isRevealed is true
-        : `/Assets/facedown_card.png`; // show face-down card if isRevealed is false
+        ? `../Assets/${role}.png`   // show card face if isRevealed is true
+        : `../Assets/facedown_card.png`; // show face-down card if isRevealed is false
 
     return (
         <div className="card-container">

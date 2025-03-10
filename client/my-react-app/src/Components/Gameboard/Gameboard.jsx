@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'; 
 import useSocket from '../../Socket/useSocket';
+import PlayerStation from '../PlayerStation/PlayerStation';
 
 export default function Gameboard() {
     const [gameState, setGameState] = useState(null);
@@ -17,8 +18,29 @@ export default function Gameboard() {
         socket.emit('gameAction', { action });
     };
 
+    // FOR TESTING PURPOSES ONLY!!!!!!!!!
+    const player1 = {
+        name: 'Vleep Vlorp',
+        coins: 3,
+        influences: [
+            { role: 'Assassin', isRevealed: true },
+            { role: 'Ambassador', isRevealed: false }
+        ],
+        eliminated: false,
+        lobby: 'lobbyCode',
+        user_id: 'userId'
+    };
+    
+
     return (
         <div className="flex flex-col items-center justify-center h-screen w-screen bg-gray-200">
+            <div className="player-station">
+                <PlayerStation player={player1} />
+            </div>
+            <div className="opponents-stations">
+
+            </div>
+            
             <div className="flex-1 flex items-center justify-center w-full">
                 <div className="bg-white p-6 shadow-lg rounded-lg w-3/4 h-3/4 flex items-center justify-center">
                     <p className="text-xl font-bold">{gameState ? `Game State: ${gameState}` : 'Waiting for game state...'}</p>
