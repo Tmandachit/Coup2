@@ -1,13 +1,3 @@
-/* General Styles */
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Arial', sans-serif;
-  background-color: #1e1e2e;
-  color: white;
-  text-align: center;
-}
-
 /* Home & Join Lobby Page Containers */
 .homeContainer, 
 .joinContainer {
@@ -19,19 +9,6 @@ body {
   padding: 20px;
 }
 
-/* Header Styling */
-h1 {
-  font-size: 2.5rem;
-  margin-bottom: 10px;
-  color: #f39c12;
-}
-
-p {
-  font-size: 1.2rem;
-  margin-bottom: 20px;
-  opacity: 0.8;
-}
-
 /* Image Styling */
 img {
   width: 100px;
@@ -39,7 +16,7 @@ img {
   margin-bottom: 20px;
 }
 
-/* 🌟 Enhanced Buttons */
+/* Enhanced Buttons */
 .home, 
 .joinButton {
   display: inline-block;
@@ -67,7 +44,7 @@ img {
   transform: scale(0.95);
 }
 
-/* 🌟 Input Fields */
+/* Input Fields */
 .lobbyInput, 
 .usernameInput {
   width: 320px;
@@ -84,14 +61,14 @@ img {
   box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.1);
 }
 
-/* 🌟 Input Field Focus Effect */
+/* Input Field Focus Effect */
 .lobbyInput:focus, 
 .usernameInput:focus {
   border-color: #f39c12;
   box-shadow: 0 0 12px rgba(243, 156, 18, 0.7);
 }
 
-/* 📦 Styled Join Box */
+/* Styled Join Box */
 .joinBox {
   display: flex;
   flex-direction: column;
@@ -104,7 +81,7 @@ img {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
-/* 👥 Lobby Members List */
+/* Lobby Members List */
 .lobbyMembers {
   margin-top: 20px;
   background: rgba(255, 255, 255, 0.1);

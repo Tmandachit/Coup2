@@ -1,36 +1,44 @@
 // Import necessary modules
-const express = require('express');                     // Express framework for building web applications
-const cors = require('cors');                           // CORS middleware to allow cross-origin resource sharing
-const { createServer } = require('http');               // HTTP module to create a server instance
-const { Server } = require('socket.io');                // Socket.IO for real-time communication
-const path = require('path');                           // Module for handling file and directory paths
+const express = require('express');                     
+const cors = require('cors');                           
+const { createServer } = require('http');               
+const { Server } = require('socket.io');                
+const path = require('path');                           
 const { db } = require("./firebase"); 
 const { doc, getDoc, setDoc, collection, query, where, getDocs } = require("firebase/firestore");
 
 // Initialize Express app and HTTP server
-const app = express();                                  // Create an Express application
-const server = createServer(app);                       // Create an HTTP server using the Express app
+const app = express();
+const server = createServer(app);
 
 // Initialize Socket.IO server with CORS configuration
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:5173'],                // Allowed client origin for socket connections
-    methods: ['GET', 'POST'],                         // Allowed HTTP methods
-    credentials: true,                                // Allow credentials (cookies, headers, etc.)
+    origin: ['http://localhost:5173'],               
+    methods: ['GET', 'POST'],                        
+    credentials: true,                               
   },
 });
 
 // Middleware setup for CORS and JSON parsing
-app.use(
-  cors({
-    origin: 'http://localhost:5173',                  // Allowed client origin for HTTP requests
-    methods: ['GET', 'POST'],                         // Allowed HTTP methods
-    credentials: true,                                // Allow credentials
-  })
-);
-app.use(express.json());                              // Middleware to parse incoming JSON requests
+app.use(cors({
+  origin: 'http://localhost:5173',                
+  methods: ['GET', 'POST'],                        
+  credentials: true,                                
+}));
+app.use(express.json());                              
 
-// Jillian stuff 
+// In-memory storage for lobbies, user mappings, and game instances
+const lobbies = {};    
+const games = {};    
+const userSockets = {}; 
+
+// Helper function to generate a unique 6-digit code
+function generateSixDigitCode() {
+  return Math.floor(100000 + Math.random() * 900000).toString(); 
+}
+
+// User Registration
 app.post("/register", async (req, res) => {
   const { firstName, lastName, email, username, password } = req.body;
 
@@ -72,7 +80,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
-
+// User Login
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
@@ -94,7 +102,7 @@ app.post("/login", async (req, res) => {
           return res.status(400).json({ message: "Invalid password" });
       }
 
-      res.status(200).json({ message: "Login successful!", user: userData });
+      res.status(200).json({ message: "Login successful!", user: userData, userId: username, firstName: userData.firstName });
 
   } catch (error) {
       console.error("Login error:", error);
@@ -102,34 +110,22 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// In-memory storage for lobbies and user mappings
-const lobbies = {};     // Object to store active lobbies and their member usernames
-const userSockets = {}; // Object to map socket.id to user information (username and lobby)
-
-// Helper function to generate a unique 6-digit code
-function generateSixDigitCode() {
-  return Math.floor(100000 + Math.random() * 900000).toString(); // Generate a random 6-digit number as a string
-}
-
-// Route to create a new lobby
+// Create a new lobby
 app.get('/createlobby', (req, res) => {
   let code = '';
 
-  // Generate a unique 6-digit code that is not already in use
   while (!code || lobbies[code]) {
     code = generateSixDigitCode();
   }
 
-  // Create a new lobby with the generated code and initialize with an empty array of players
   lobbies[code] = [];
   console.log(`Lobby ${code} CREATED`);
-  res.json({ lobby: code });  // Respond with the created lobby code in JSON format
+  res.json({ lobby: code });
 });
 
-// Endpoint to fetch players for a specific lobby by its code
+// Fetch players in a lobby
 app.get('/lobby/:lobbyCode/players', (req, res) => {
   const { lobbyCode } = req.params;
-  // Check if the lobby exists and return the list of players; otherwise, send a 404 error
   if (lobbies[lobbyCode]) {
     res.json({ players: lobbies[lobbyCode] });
   } else {
@@ -137,76 +133,90 @@ app.get('/lobby/:lobbyCode/players', (req, res) => {
   }
 });
 
-// Socket.IO connection handler for real-time events
+// Socket.IO connection handler
 io.on('connection', (socket) => {
   console.log(`User connected: ${socket.id}`);
 
-  // Handle the 'join-lobby' event when a client requests to join a lobby
+  // Handle joining a lobby
   socket.on('join-lobby', ({ username, lobby }, callback) => {
-    // Check if the requested lobby exists
     if (!lobbies[lobby]) {
       console.error(`Lobby ${lobby} does not exist.`);
-      if (callback) callback({ status: 'error', message: 'Lobby does not exist' });
+      if (callback && typeof callback === "function") {
+        callback({ status: "error", message: "Lobby does not exist" });
+      }
       return;
     }
 
-    // Add user to the lobby if they are not already in it
     if (!lobbies[lobby].includes(username)) {
       lobbies[lobby].push(username);
-      userSockets[socket.id] = { username, lobby };  // Map the socket ID to the user details
+      userSockets[socket.id] = { username, lobby };
     }
 
-    // Add the socket to the room corresponding to the lobby
     socket.join(lobby);
-    console.log(`${username} joined lobby: ${lobby} with socket id: ${socket.id}`);
+    console.log(`${username} joined lobby: ${lobby}`);
 
-    // Notify all members in the lobby about the updated list of players
     io.to(lobby).emit('lobby-update', lobbies[lobby]);
 
-    // Send an acknowledgment to the client indicating successful joining
-    if (callback) callback({ status: 'ok' });
+    if (callback && typeof callback === "function") {
+      callback({ status: "ok" });
+    }
   });
 
-  // Handle the 'disconnecting' event to manage user disconnection
+  // Handle starting the game
+  socket.on('start-game', ({ lobbyCode }) => {
+    if (!lobbies[lobbyCode]) {
+      console.error(`Attempt to start a non-existent lobby: ${lobbyCode}`);
+      return;
+    }
+
+    if (games[lobbyCode]) {
+      console.log(`Game already started for lobby ${lobbyCode}`);
+      return;
+    }
+
+    games[lobbyCode] = {
+      players: [...lobbies[lobbyCode]],
+      startedAt: new Date().toISOString(),
+      status: 'in-progress'
+    };
+
+    console.log(`Game started for lobby ${lobbyCode}`);
+    io.to(lobbyCode).emit('game-started', { lobbyCode });
+  });
+
+  // Handle player disconnection
   socket.on('disconnecting', () => {
     console.log(`User disconnecting: ${socket.id}`);
     const user = userSockets[socket.id];
     if (user) {
       const { username, lobby } = user;
       if (lobbies[lobby]) {
-        // Remove the user from the lobby's list
         lobbies[lobby] = lobbies[lobby].filter((user) => user !== username);
-
-        // Notify remaining lobby members of the updated players list
         io.to(lobby).emit('lobby-update', lobbies[lobby]);
 
-        // Delete the lobby if there are no more players left
         if (lobbies[lobby].length === 0) {
           delete lobbies[lobby];
           console.log(`Lobby ${lobby} deleted.`);
         }
       }
-      // Remove the user from the userSockets mapping
       delete userSockets[socket.id];
     }
   });
 
-  // Handle the 'disconnect' event and log the disconnection
   socket.on('disconnect', () => {
     console.log(`User disconnected: ${socket.id}`);
   });
 });
 
-// Serve the React application's build files as static assets
+// Serve React Frontend
 const clientBuildPath = path.join(__dirname, '../client/my-react-app/');
 app.use(express.static(clientBuildPath));
 
-// Catch-all route to send the React application's index.html file for any unmatched routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(clientBuildPath, 'index.html'));
 });
 
-// Start the server and listen on the specified port (default is 5001)
+// Start the server
 const PORT = process.env.PORT || 5001;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

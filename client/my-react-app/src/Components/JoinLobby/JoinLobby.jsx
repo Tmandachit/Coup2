@@ -5,42 +5,36 @@ import useSocket from '../../Socket/useSocket';
 import './JoinLobby.css';
 
 function JoinLobby() {
-    const [username, setUsername] = useState('');
     const [lobbyCode, setLobbyCode] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
     const socket = useSocket();
-
     useEffect(() => {
         const params = new URLSearchParams(location.search);
         const code = params.get('lobby');
         if (code) setLobbyCode(code);
     }, [location]);
 
+    const userName = sessionStorage.getItem("userId");
+
     const handleJoin = () => {
-        if (username.trim() && lobbyCode.trim().length === 6) {
-            socket.emit('join-lobby', { username, lobby: lobbyCode }, (response) => {
+        if (lobbyCode.trim().length === 6) {
+            socket.emit('join-lobby', { username: userName, lobby: lobbyCode }, (response) => {
                 if (response.status === 'ok') {
-                  navigate(`/lobby?lobby=${lobbyCode}`, { state: { username } });
+                  navigate(`/lobby?lobby=${lobbyCode}`, { state: { username: userName } });
                 } else {
                   setError(response.message || 'Failed to join the lobby.');
                 }
             });
         } else {
-            setError('Both username and a valid 6-character lobby code are required.');
+            setError('A valid 6-character lobby code is required.');
         }
     };
 
     return (
         <div className="joinContainer">
             <h2>Join Lobby</h2>
-            <input
-                type="text"
-                placeholder="Enter Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-            />
             <input
                 type="text"
                 placeholder="Lobby Code"

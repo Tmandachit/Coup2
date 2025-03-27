@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Login.css";
 
@@ -18,6 +18,10 @@ const Login = () => {
 
         if (response.status === 200) {
             alert("Login successful!");
+
+            sessionStorage.setItem("userId", response.data.userId);
+            sessionStorage.setItem("firstName", response.data.firstName);
+
             navigate("/home");
         } else {
             alert(response.data.message || "Invalid username or password.");
