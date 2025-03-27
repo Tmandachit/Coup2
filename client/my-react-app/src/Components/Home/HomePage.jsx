@@ -57,6 +57,14 @@ const HomePage = () => {
           Join Game
         </Link>
       </div>
+
+     {/* Join Game Button */}
+     <div className="input-group-btn">
+        <Link className="home" to="/profile">
+          Profile
+        </Link>
+      </div>
+
     </div>
   );
 };

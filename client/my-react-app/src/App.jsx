@@ -5,6 +5,7 @@ import HomePage from "./Components/Home/HomePage";
 import JoinLobby from "./Components/JoinLobby/JoinLobby";
 import Lobby from "./Components/Lobby/Lobby"; 
 import Game from "./Components/Game/Game";
+import Profile from "./Components/Profile/Profile";
 import "./index.css"
 
 function App() {
@@ -17,7 +18,8 @@ function App() {
         <Route path="/Home" element={<HomePage />} />
         <Route path="/lobby" element={<Lobby />} />
         <Route path="/Join" element={<JoinLobby />} /> 
-        <Route path="/game" element={<Game />} />      
+        <Route path="/game" element={<Game />} />
+        <Route path="/profile" element={<Profile />} />            
       </Routes>
     </Router>
   );

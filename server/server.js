@@ -14,7 +14,7 @@ const server = createServer(app);
 // Initialize Socket.IO server with CORS configuration
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:5174'],               
+    origin: ['http://localhost:5173'],               
     methods: ['GET', 'POST'],                        
     credentials: true,                               
   },
@@ -22,7 +22,7 @@ const io = new Server(server, {
 
 // Middleware setup for CORS and JSON parsing
 app.use(cors({
-  origin: 'http://localhost:5174',                
+  origin: 'http://localhost:5173',                
   methods: ['GET', 'POST'],                        
   credentials: true,                                
 }));
