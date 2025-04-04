@@ -5,6 +5,7 @@ const { createServer } = require('http');
 const { Server } = require('socket.io');                
 const path = require('path');                           
 const { db } = require("./firebase"); 
+const bcrypt = require("bcrypt");
 const { doc, getDoc, setDoc, collection, query, where, getDocs } = require("firebase/firestore");
 
 // Initialize Express app and HTTP server
@@ -63,14 +64,17 @@ app.post("/register", async (req, res) => {
           return res.status(400).json({ message: "Email is already registered" });
       }
 
-      await setDoc(doc(db, "players", username), {
-          firstName,
-          lastName,
-          email,
-          username,
-          password,
-          createdAt: new Date().toISOString(),
-      });
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    await setDoc(doc(db, "players", username), {
+      firstName,
+      lastName,
+      email,
+      username,
+      password: hashedPassword,
+      createdAt: new Date().toISOString(),
+    });
 
       res.status(201).json({ message: "User registered successfully!" });
 
@@ -98,9 +102,13 @@ app.post("/login", async (req, res) => {
 
       const userData = userDoc.data();
 
-      if (userData.password !== password) {
-          return res.status(400).json({ message: "Invalid password" });
-      }
+      const isPasswordValid = await bcrypt.compare(password, userData.password);
+
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Invalid password" });
+    }
+
+    const { password: _, ...userWithoutPassword } = userData;
 
       res.status(200).json({ message: "Login successful!", user: userData, userId: username, firstName: userData.firstName });
 
