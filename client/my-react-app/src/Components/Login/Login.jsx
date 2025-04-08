@@ -21,6 +21,9 @@ const Login = () => {
 
             sessionStorage.setItem("userId", response.data.userId);
             sessionStorage.setItem("firstName", response.data.firstName);
+            sessionStorage.setItem("lastName", response.data.lastName);
+            sessionStorage.setItem("gamesPlayed", response.data.gamesPlayed);
+            sessionStorage.setItem("gamesWon", response.data.gamesWon);
 
             navigate("/home");
         } else {

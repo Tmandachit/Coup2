@@ -1,0 +1,133 @@
+.profile-container {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+  background-color: #f0f2f5;
+  min-height: 100vh;
+}
+
+.profile-card {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+
+.profile-name {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.profile-stats {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.profile-stats div {
+  margin: 8px 0;
+}
+
+.edit-button,
+.password-button,
+.back-button {
+  padding: 10px 20px;
+  width: 100%;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+}
+
+.edit-button {
+  background-color: #0066cc;
+  color: white;
+}
+
+.edit-button:hover {
+  background-color: #0055aa;
+}
+
+.password-button {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.password-button:hover {
+  background-color: #c0c0c0;
+}
+
+.spacer {
+  height: 30px;
+}
+
+.back-button {
+  background-color: #4caf50;
+  color: white;
+}
+
+.back-button:hover {
+  background-color: #43a047;
+}
+
+/* Add at the bottom of Profile.css if not already there */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.modal h3 {
+  margin-bottom: 15px;
+}
+
+.modal input {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-buttons button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.modal-buttons button:first-child {
+  background-color: #0066cc;
+  color: white;
+}
+
+.modal-buttons button:last-child {
+  background-color: #ccc;
+  color: black;
+}
