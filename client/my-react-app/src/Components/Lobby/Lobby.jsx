@@ -11,9 +11,11 @@ const Lobby = () => {
   const navigate = useNavigate();
   
   const [players, setPlayers] = useState([]);
+  const allReady = players.length > 0 && players.every(p => p.ready);
+  const [isReady, setIsReady] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
 
-  const userName = sessionStorage.getItem("userName");
+  const userName = sessionStorage.getItem("userId");
 
   useEffect(() => {
     if (lobbyCode) {
@@ -34,6 +36,8 @@ const Lobby = () => {
   useEffect(() => {
     socket.on('lobby-update', (updatedPlayers) => {
       setPlayers(updatedPlayers);
+      const current = updatedPlayers.find(p => p.name === userName);
+      setIsReady(current?.ready || false);
     });
 
     socket.on('game-started', () => {
@@ -60,13 +64,34 @@ const Lobby = () => {
         <h2>Players:</h2>
         <ul className="lobbyList">
           {players.map((player, index) => (
-            <li key={index}>{player}</li>
+            <li
+  key={index}
+  className={player.ready ? 'playerReady' : 'playerNotReady'}
+>
+  {player.name} - {player.ready ? 'Ready' : 'Not Ready'}
+</li>
+
           ))}
         </ul>
-        <button 
-          className="startGameButton" 
-          onClick={handleStartGame} 
-          disabled={gameStarted}
+
+        {/* Ready Up Button */}
+        <button
+          className="readyUpButton"
+          onClick={() => {
+            console.log(`${isReady ? 'Unreadying' : 'Readying'} as`, { lobbyCode, userName });
+            socket.emit('playerReady', { lobbyCode, userName, ready: !isReady });
+            setIsReady(!isReady);
+          }}
+        >
+          {isReady ? 'Unready' : 'Ready Up'}
+        </button>
+
+
+        {/* Start Game Button */}
+        <button
+          className="startGameButton"
+          onClick={handleStartGame}
+          disabled={!allReady || gameStarted}
         >
           {gameStarted ? "Game Starting..." : "Start Game"}
         </button>

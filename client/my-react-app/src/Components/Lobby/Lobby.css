@@ -108,8 +108,19 @@
     font-size: 2rem;
     font-weight: bold;
     color: white;
-    background-color: #1e88e5;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.playerReady {
+    background-color: #2ecc71 !important;
+  }
+  
+.playerNotReady {
+background-color: #e74c3c !important;
+}
+.startGameButton:disabled {
+    background-color: #7f8c8d; /* grey */
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
