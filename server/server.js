@@ -5,6 +5,7 @@ const { createServer } = require('http');
 const { Server } = require('socket.io');                
 const path = require('path');                           
 const { db } = require("./firebase"); 
+const bcrypt = require("bcrypt");
 const { doc, getDoc, setDoc, collection, query, where, getDocs } = require("firebase/firestore");
 
 // Initialize Express app and HTTP server
@@ -63,14 +64,19 @@ app.post("/register", async (req, res) => {
           return res.status(400).json({ message: "Email is already registered" });
       }
 
-      await setDoc(doc(db, "players", username), {
-          firstName,
-          lastName,
-          email,
-          username,
-          password,
-          createdAt: new Date().toISOString(),
-      });
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    await setDoc(doc(db, "players", username), {
+      firstName,
+      lastName,
+      email,
+      username,
+      password: hashedPassword,
+      gamesPlayed: 0,
+      gamesWon: 0,
+      createdAt: new Date().toISOString(),
+    });
 
       res.status(201).json({ message: "User registered successfully!" });
 
@@ -98,15 +104,90 @@ app.post("/login", async (req, res) => {
 
       const userData = userDoc.data();
 
-      if (userData.password !== password) {
-          return res.status(400).json({ message: "Invalid password" });
-      }
+      const isPasswordValid = await bcrypt.compare(password, userData.password);
 
-      res.status(200).json({ message: "Login successful!", user: userData, userId: username, firstName: userData.firstName });
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Invalid password" });
+    }
+
+    const { password: _, ...userWithoutPassword } = userData;
+
+      res.status(200).json({ message: "Login successful!", 
+        user: userData, 
+        userId: username, 
+        firstName: userData.firstName, 
+        lastName: userData.lastName, 
+        gamesPlayed: userData.gamesPlayed, 
+        gamesWon: userData.gamesWon 
+      });
 
   } catch (error) {
       console.error("Login error:", error);
       res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// Change password
+app.post("/changepassword", async (req, res) => {
+  const { userId, currentPassword, newPassword } = req.body;
+
+  if (!userId || !currentPassword || !newPassword) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  try {
+    const userRef = doc(db, "players", userId);
+    const userDoc = await getDoc(userRef);
+
+    if (!userDoc.exists()) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const userData = userDoc.data();
+    const isPasswordValid = await bcrypt.compare(currentPassword, userData.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Current password is incorrect" });
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    await setDoc(userRef, { ...userData, password: hashedNewPassword });
+
+    res.status(200).json({ message: "Password updated successfully!" });
+  } catch (err) {
+    console.error("Password change error:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// Change profile
+app.post("/changeprofile", async (req, res) => {
+  const { username, firstName, lastName } = req.body;
+
+  if (!username || !firstName || !lastName) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  try {
+    const userRef = doc(db, "players", username);
+    const userDoc = await getDoc(userRef);
+
+    if (!userDoc.exists()) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const userData = userDoc.data();
+
+    await setDoc(userRef, {
+      ...userData,
+      firstName,
+      lastName,
+    });
+
+    res.status(200).json({ message: "Profile updated successfully!" });
+  } catch (error) {
+    console.error("Profile update error:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 

@@ -1,4 +1,9 @@
-/* Global Styles */
+h1 {
+  font-size: 4.5rem;
+  font-family: "Orbitron";
+  margin-bottom: 10px;
+  color: #1e88e5;
+}
 
 .login-container {
   display: flex;
