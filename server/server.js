@@ -147,8 +147,8 @@ io.on('connection', (socket) => {
       return;
     }
 
-    if (!lobbies[lobby].includes(username)) {
-      lobbies[lobby].push(username);
+    if (!lobbies[lobby].some(player => player.name === username)) {
+      lobbies[lobby].push({ name: username, ready: false });
       userSockets[socket.id] = { username, lobby };
     }
 
@@ -161,6 +161,24 @@ io.on('connection', (socket) => {
       callback({ status: "ok" });
     }
   });
+
+  // Handle Ready Up
+  socket.on('playerReady', ({ lobbyCode, userName, ready }) => {
+    if (!lobbies[lobbyCode]) {
+      console.error(`Attempt to ready in a non-existent lobby: ${lobbyCode}`);
+      return;
+    }
+  
+    lobbies[lobbyCode] = lobbies[lobbyCode].map(player =>
+      player.name === userName ? { ...player, ready } : player
+    );
+  
+    console.log(`${userName} is now ${ready ? 'Ready' : 'Not Ready'} in lobby ${lobbyCode}`);
+  
+    io.to(lobbyCode).emit('lobby-update', lobbies[lobbyCode]);
+  });
+  
+
 
   // Handle starting the game
   socket.on('start-game', ({ lobbyCode }) => {
@@ -191,7 +209,7 @@ io.on('connection', (socket) => {
     if (user) {
       const { username, lobby } = user;
       if (lobbies[lobby]) {
-        lobbies[lobby] = lobbies[lobby].filter((user) => user !== username);
+        lobbies[lobby] = lobbies[lobby].filter((player) => player.name !== username);
         io.to(lobby).emit('lobby-update', lobbies[lobby]);
 
         if (lobbies[lobby].length === 0) {
