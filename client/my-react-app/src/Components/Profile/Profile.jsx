@@ -90,6 +90,11 @@ const Profile = () => {
     }
   };
 
+  const gamesPlayed = parseInt(sessionStorage.getItem("gamesPlayed")) || 0;
+  const gamesWon = parseInt(sessionStorage.getItem("gamesWon")) || 0;
+
+  const winRate = gamesPlayed > 0 ? ((gamesWon / gamesPlayed) * 100).toFixed(1) : "0.0";
+
   return (
     <div className="profile-container">
       <div className="profile-card">
@@ -99,9 +104,9 @@ const Profile = () => {
 
 
         <div className="profile-stats">
-          <div><strong>Games Played:</strong> 30 </div>
-          <div><strong>Wins:</strong> 27</div>
-          <div><strong>Win Rate:</strong> 64.3%</div>
+          <div><strong>Games Played:</strong> {gamesPlayed} </div>
+          <div><strong>Wins:</strong> {gamesWon} </div>
+          <div><strong>Win Rate:</strong> {winRate}%</div>
         </div>
 
         <button className="edit-button" onClick={() => setIsEditModalOpen(true)}>Edit Profile</button>
