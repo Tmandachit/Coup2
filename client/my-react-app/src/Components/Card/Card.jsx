@@ -1,6 +1,9 @@
 import './Card.css';
 import Assassin from '../Assets/Assassin.png';
 import Ambassador from '../Assets/Ambassador.png';
+import Captain from '../Assets/Captain.png';
+import Contessa from '../Assets/Contessa.png';
+import Duke from '../Assets/Duke.png';
 import FaceDown from '../Assets/FaceDown.png';
 
 export default function Card({ role, isRevealed}) {
@@ -14,11 +17,11 @@ export default function Card({ role, isRevealed}) {
             case 'Ambassador':
                 return Ambassador;
             case 'Captain':
-                return FaceDown;
+                return Captain;
             case 'Contessa':
-                return FaceDown;
+                return Contessa;
             case 'Duke':
-                return FaceDown;
+                return Duke;
             default:
                 return FaceDown;
         }

@@ -14,12 +14,13 @@ export default function  PlayerStation({ player }) {
     // a card object has attributes "role" and "isRevealed"
     return (
         <div className = "station">
-            <Wallet coins={player.coins} />
+            
             <div className="cards-container">
                 {player.influences.map((card, index) => (
                     <Card key={index} role={card.role} isRevealed={card.isRevealed} />
                 ))}
             </div>
+            <Wallet coins={player.coins} />
         </div>
     );
 };
