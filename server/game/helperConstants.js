@@ -4,13 +4,13 @@ const CardNames = {
     CAPTAIN: "captain",
     AMBASSADOR: "ambassador",
     CONTESSA: "contessa",
-
+  
     values: function () {
-        return [this.DUKE, this.ASSASSIN, this.CAPTAIN, this.AMBASSADOR, this.CONTESSA]
+      return [this.DUKE, this.ASSASSIN, this.CAPTAIN, this.AMBASSADOR, this.CONTESSA];
     }
- };
-
- const ActionNames = {
+  };
+  
+  const ActionNames = {
     INCOME: "income",
     FOREIGN_AID: "foreign aid",
     COUP: "coup",
@@ -18,11 +18,22 @@ const CardNames = {
     ASSASSINATE: "assassinate",
     EXCHANGE: "exchange",
     STEAL: "steal",
-
+  
     values: function () {
-        return [this.INCOME, this.FOREIGN_AID, this.COUP, this.TAX, this.ASSASSINATE, this.EXCHANGE, this.STEAL]
+      return [
+        this.INCOME,
+        this.FOREIGN_AID,
+        this.COUP,
+        this.TAX,
+        this.ASSASSINATE,
+        this.EXCHANGE,
+        this.STEAL
+      ];
     }
-};
-
-export const Cards = CardNames;
-export const Actions = ActionNames;
+  };
+  
+  module.exports = {
+    Cards: CardNames,
+    Actions: ActionNames
+  };
+  
