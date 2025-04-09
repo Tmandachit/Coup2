@@ -6,17 +6,18 @@
     align-items: center;
     text-align: center;
     margin-top: 20px;
+    max-width: 40%;  /* Adjust based on card size */
+    max-height: 80%;
+    margin: 5%;
 }
 
 /* adjust card size to be a percentage of the component that contains it
     - cards will be contained by the PlayerStation component */
-.card-image {
-    width: 128px;  /* Adjust based on card size */
-    height: 192px;
+.card-image { 
     border-radius: 10px;
     box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.3);
     transition: transform 0.5s ease-in-out;
-    margin:10px;
+    margin: 10px;
 }
 
 /* 
