@@ -7,6 +7,7 @@ const path = require('path');
 const { db } = require("./firebase"); 
 const bcrypt = require("bcrypt");
 const { doc, getDoc, setDoc, collection, query, where, getDocs } = require("firebase/firestore");
+const Game = require('./game/coupGame.js');
 
 // Initialize Express app and HTTP server
 const app = express();
@@ -31,7 +32,7 @@ app.use(express.json());
 
 // In-memory storage for lobbies, user mappings, and game instances
 const lobbies = {};    
-const games = {};    
+const games = {};
 const userSockets = {}; 
 
 // Helper function to generate a unique 6-digit code
@@ -258,8 +259,6 @@ io.on('connection', (socket) => {
   
     io.to(lobbyCode).emit('lobby-update', lobbies[lobbyCode]);
   });
-  
-
 
   // Handle starting the game
   socket.on('start-game', ({ lobbyCode }) => {
@@ -267,21 +266,44 @@ io.on('connection', (socket) => {
       console.error(`Attempt to start a non-existent lobby: ${lobbyCode}`);
       return;
     }
-
+  
     if (games[lobbyCode]) {
       console.log(`Game already started for lobby ${lobbyCode}`);
       return;
     }
-
-    games[lobbyCode] = {
-      players: [...lobbies[lobbyCode]],
-      startedAt: new Date().toISOString(),
-      status: 'in-progress'
-    };
-
-    console.log(`Game started for lobby ${lobbyCode}`);
+  
+    const players = [...lobbies[lobbyCode]];
+  
+    // Get all sockets for players in the lobby
+    const sockets = players.map(p => {
+      const socketEntry = Object.entries(userSockets).find(([, val]) =>
+        val.username === p.name && val.lobby === lobbyCode
+      );
+      return socketEntry ? socketEntry[0] : null;
+    }).filter(Boolean);
+  
+    const game = new Game(players, sockets);
+    games[lobbyCode] = game;
+  
+    console.log(`Game instance created for lobby ${lobbyCode}`);
     io.to(lobbyCode).emit('game-started', { lobbyCode });
   });
+
+  // Handle switch from lobby to game
+  socket.on('join-game', ({ lobbyCode }) => {
+    socket.join(lobbyCode);
+    console.log(`${socket.id} joined game room ${lobbyCode}`);
+  
+    const game = games[lobbyCode];
+    if (game) {
+      socket.emit('game-update', {
+        players: game.players
+      });
+    } else {
+      console.warn(`No game found for lobby ${lobbyCode}`);
+    }
+  });
+  
 
   // Handle player disconnection
   socket.on('disconnecting', () => {

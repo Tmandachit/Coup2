@@ -1,16 +1,15 @@
-import { Cards } from "./helperConstants.js"; // Ensure `.js` is included
+const { Cards } = require("./helperConstants.js"); 
 
 // Function to build a deck from Cards
 const buildDeck = () => {
     let deck = [];
-    let cardNames = Object.values(Cards); // Fix `.values()`
+    let cardNames = Cards.values();
 
     for (let card of cardNames) {
         for (let i = 0; i < 3; i++) {
             deck.push(card);
         }
     }
-    
     return deck;
 };
 
@@ -75,13 +74,12 @@ const generateSixDigitCode = () => {
     return Math.floor(100000 + Math.random() * 900000);
 };
 
-// Export all functions correctly
-export { 
-    generateSixDigitCode, 
-    buildDeck, 
-    shuffle, 
-    buildPlayers, 
-    exportPlayers, 
-    buildNameSocketMap, 
-    buildNameIndexMap 
+module.exports = {
+    generateSixDigitCode,
+    buildDeck,
+    shuffle,
+    buildPlayers,
+    exportPlayers,
+    buildNameSocketMap,
+    buildNameIndexMap
 };
