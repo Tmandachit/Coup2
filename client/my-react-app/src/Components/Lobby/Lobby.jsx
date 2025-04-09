@@ -53,8 +53,7 @@ const Lobby = () => {
 
   // Function to start the game
   const handleStartGame = () => {
-    // socket.emit('start-game', { lobbyCode });
-    navigate('/game')
+    socket.emit('start-game', { lobbyCode });
   };
 
   return (
