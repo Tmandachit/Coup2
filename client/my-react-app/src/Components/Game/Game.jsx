@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import rulesImage from './CoupRule.png';
+import cheatSheetImage from './CoupCheatSheet.png';
 import useSocket from '../../Socket/useSocket';
 import "./Game.css";
 
@@ -9,6 +11,21 @@ const Game = () => {
   const socket = useSocket();
   const userName = sessionStorage.getItem("userId");
   const [players, setPlayers] = useState([]);
+
+  // New: Popup state
+  const [popupImage, setPopupImage] = useState(null);
+
+  const handleShowPopup = (type) => {
+    if (type === 'rules') {
+      setPopupImage(rulesImage);
+    } else if (type === 'cheatsheet') {
+      setPopupImage(cheatSheetImage); 
+    }
+  };
+
+  const handleClosePopup = () => {
+    setPopupImage(null);
+  };
 
   useEffect(() => {
     socket.emit('join-game', { lobbyCode });
@@ -26,10 +43,20 @@ const Game = () => {
     <div className="game-page">
       {/* Top Section: Rules & Cheat Sheet */}
       <div className='top-left-buttons'>
-        <button className='small-button'>Rules</button>
-        <button className='small-button'>Cheat Sheet</button>
+        <button className='small-button' onClick={() => handleShowPopup('rules')}>Rules</button>
+        <button className='small-button' onClick={() => handleShowPopup('cheatsheet')}>Cheat Sheet</button>
       </div>
-  
+
+      {/* Fullscreen Image Popup */}
+      {popupImage && (
+        <div className="popup-overlay">
+          <div className="popup-content">
+            <img src={popupImage} alt="Popup" className="popup-image" />
+            <button onClick={handleClosePopup} className="close-popup-button">✕</button>
+          </div>
+        </div>
+      )}
+
       <main className="game-layout">
         {/* Opponent Cards */}
         <div className='player-cards'>
@@ -47,7 +74,7 @@ const Game = () => {
               </div>
           ))}
         </div>
-  
+
         {/* Player Section */}
         {players.length > 0 && (
           <div className='my-player-card-container'>
@@ -67,7 +94,7 @@ const Game = () => {
             ))}
           </div>
         )}
-  
+
         {/* Action Buttons */}
         <div className='action-buttons-container'>
           <button className='income-button'>Income</button>
@@ -79,7 +106,7 @@ const Game = () => {
           <button className='exchange-button'>Exchange</button>
         </div>
       </main>
-  
+
       {/* Event Log */}
       <div className='event-log'>
         <h2>Event Log:</h2>
