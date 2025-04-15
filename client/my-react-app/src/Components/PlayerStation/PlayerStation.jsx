@@ -5,7 +5,7 @@ import './PlayerStation.css';
 
 
 
-export default function  PlayerStation({ player }) {
+export default function  PlayerStation({ player, opponent }) {
     // player is an object with the following properties:
     // name, coins, influences, eliminated, lobby, user_id
 
@@ -20,7 +20,7 @@ export default function  PlayerStation({ player }) {
                     <Card key={index} role={card.role} isRevealed={card.isRevealed} />
                 ))}
             </div>
-            <Wallet coins={player.coins} />
+            <Wallet coins={player.money} />
         </div>
     );
 };

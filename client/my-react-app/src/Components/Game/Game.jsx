@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import useSocket from '../../Socket/useSocket';
+import PlayerStation from '../PlayerStation/PlayerStation';
 import "./Game.css";
 
 const Game = () => {
@@ -37,10 +38,11 @@ const Game = () => {
             .filter((p) => p.name !== userName)
             .map((player, index) => (
               <div key={index} className='player-card'>
+                {/* <PlayerStation key={index} player={player} opponent/> */}
                 <h2>{player.name}</h2>
                 <p>Coins: {player.money}</p>
                 <div className='card-placeholders'>
-                  {Array.from({ length: player.influences.length }).map((_, i) => (
+                  {Array.from({ length: player.influenceCount }).map((_, i) => (
                     <div key={i} className='card-placeholder'></div>
                   ))}
                 </div>
@@ -57,7 +59,7 @@ const Game = () => {
                 <div key={index} className="my-player-card">
                   <p className="my-player-coins">Coins: {player.money}</p>
                   <div className="my-cards-container">
-                    {player.influences.map((card, i) => (
+                    {Array.isArray(player.influences) && player.influences.map((card, i) => (
                       <div key={i} className={`my-card card-${card.toLowerCase()}`}>
                         {card}
                       </div>

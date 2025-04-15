@@ -284,7 +284,16 @@ io.on('connection', (socket) => {
       return socketEntry ? socketEntry[0] : null;
     }).filter(Boolean);
   
-    const game = new Game(players, sockets);
+    // const game = new Game(players, sockets);
+
+    // Attach socketID to each player
+    const playersWithSockets = players.map((player, index) => ({
+      ...player,
+      socketID: sockets[index]
+    }));
+
+    const game = new Game(playersWithSockets, sockets);
+
     games[lobbyCode] = game;
   
     console.log(`Game instance created for lobby ${lobbyCode}`);
@@ -297,9 +306,33 @@ io.on('connection', (socket) => {
     console.log(`${socket.id} joined game room ${lobbyCode}`);
   
     const game = games[lobbyCode];
+
+    // ensure that full player data is only sent to corresponding user, with only public info for others
     if (game) {
-      socket.emit('game-update', {
-        players: game.players
+      // const socketUser = userSockets[socket.id];
+      // const yourName = socketUser?.username;
+
+      // const sanitizedPlayers = game.players.map((player) => {
+      //   if (player.name === yourName) {
+      //     // Send full data for current player
+      //     return player;
+      //   } else {
+      //     // Send only public info for opponents
+      //     return {
+      //       name: player.name,
+      //       money: player.money,
+      //       influenceCount: player.influences.length // just send the amount of influence cards
+      //     };
+      //   }
+      // });
+
+      // const playerData = game.getPlayerView(socket.id);
+
+      // emit game-update event on a player-by-player basis - not all players receive the same data
+      game.players.forEach(player => {
+        const socketId = game.nameSocketMap[player.name];
+        const playerData = game.getPlayerView(socketId);
+        io.to(socketId).emit('game-update', { players: playerData });
       });
     } else {
       console.warn(`No game found for lobby ${lobbyCode}`);
