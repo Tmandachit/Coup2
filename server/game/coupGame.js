@@ -1,4 +1,4 @@
-const { buildNameSocketMap, buildNameIndexMap, buildPlayers, buildDeck, shuffle } = require('./helperFunctions');
+const { buildNameSocketMap, buildNameIndexMap, buildPlayers, buildDeck, shuffle, updateGameState, broadcast} = require('./helperFunctions');
 const { Actions } = require('./helperConstants');
 
 class Game {
@@ -61,7 +61,7 @@ class Game {
     }
 
     this.endTurn(); // end this player's turn
-    this.updateGameState(); // update every players game
+    updateGameState(); // update every players game
 }
 }
 module.exports = Game;

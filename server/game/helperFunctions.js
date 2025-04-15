@@ -75,7 +75,7 @@ const generateSixDigitCode = () => {
 };
 
 // Update the game state at every action
-const updateGameState() {
+function updateGameState() { 
     for (let i = 0; i < this.players.length; i++) {
       const player = this.players[i];
       this.gameSocket[i].emit('gameState', {
@@ -91,6 +91,13 @@ const updateGameState() {
     }
   }
 
+  // Tell everyone what action was taken
+  function broadcast(message) {
+    for (let socket of this.gameSocket) {
+      socket.emit('gameMessage', message);
+    }
+  }
+
 
 
 module.exports = {
@@ -100,5 +107,7 @@ module.exports = {
     buildPlayers,
     exportPlayers,
     buildNameSocketMap,
-    buildNameIndexMap
+    buildNameIndexMap,
+    updateGameState,
+    broadcast
 };
