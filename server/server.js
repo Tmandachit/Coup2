@@ -260,6 +260,11 @@ io.on('connection', (socket) => {
     io.to(lobbyCode).emit('lobby-update', lobbies[lobbyCode]);
   });
 
+  // Handle action submit
+  socket.on('submit-action', ({ playerName, action, target }) => {
+    return;
+  });
+
   // Handle starting the game
   socket.on('start-game', ({ lobbyCode }) => {
     if (!lobbies[lobbyCode]) {

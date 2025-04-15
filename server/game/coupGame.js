@@ -48,11 +48,6 @@ class Game {
           player.coins += 3;
           this.broadcast(`${player.name} takes Tax (+3 coins).`);
           break;
-          
-      case this.actions.FOREIGN_AID:
-            player.coins += 2;
-            this.broadcast(`${player.name} takes Foreign Aid (+2 coins).`);
-            break;
       // figure out how to do the ones where you have to select another player 
       // figure out counteractions 
       
