@@ -1,4 +1,43 @@
-.coin-image {
+/* .coin-image {
     width: 25%;
     height: 25%;
+} */
+.wallet-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5vh 1vw;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    margin-top: 1vh;
+}
+
+.coin-count {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-right: 0.5vw;
+}
+
+.coin-image {
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+/* Opponent wallet should be smaller */
+.opponent-station .wallet-container {
+    padding: 0.3vh 0.8vw;
+}
+
+.opponent-station .coin-count {
+    font-size: 0.9rem;
+}
+
+.opponent-station .coin-image {
+    width: 0.9rem;
+    height: 0.9rem;
+}
+
+/* Player wallet styling */
+.player-station .wallet-container {
+    padding: 0.6vh 1.2vw;
 }

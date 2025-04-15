@@ -1,20 +1,93 @@
-.station {
+/* .station {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-/* make sure cards are displayed in a row */
+/* make sure cards are displayed in a row 
 .cards-container {
     /* display: flex;
     flex-direction: row;
     align-items: center;
     text-align: center;
-    margin-top: 20px; */
+    margin-top: 20px; 
 
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     margin-bottom: 30px;
+} */
+
+
+.station {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    padding: 1.5vh 2vw;
+    transition: transform 0.2s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.station:hover {
+    transform: translateY(-5px);
+}
+
+/* Opponent stations - smaller, in a row at the top */
+.opponent-station {
+    width: 15vw;
+    min-width: 140px;
+    max-width: 180px;
+    background-color: #213f7a;
+    color: white;
+    margin: 0 1vw;
+}
+
+/* Player station - larger, above action buttons */
+.player-station {
+    width: 50vw;
+    min-width: 300px;
+    max-width: 700px;
+    background-color: #8096c1;
+    color: white;
+    margin-bottom: 3vh;
+    padding: 2vh 3vw;
+    /* Add margin to create more separation from opponents */
+    margin-top: 6vh;
+}
+
+.player-name {
+    font-size: 1.2rem;
+    margin: 0 0 1vh 0;
+    font-weight: bold;
+}
+
+/* Display cards in a row */
+.cards-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1vw;
+    margin-bottom: 1.5vh;
+    width: 100%;
+}
+
+/* Adjust card sizes based on station type */
+.opponent-station .card-container {
+    transform: scale(0.6);
+    margin: -1.5vh -1vw;
+}
+
+.player-station .card-container {
+    transform: scale(1.2); /* Make cards bigger for the client player */
+    margin: -0.5vh 0;
+    flex: 3; /* Make cards take up more space */
+}
+
+/* Make sure wallet takes less space in player station */
+.player-station .wallet-container {
+    flex: 1;
+    margin-top: 1vh;
 }
