@@ -6,21 +6,22 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0.5vh 1vw;
+    /* padding: 0.5vh 0.25vw; */
     background-color: rgba(0, 0, 0, 0.2);
     border-radius: 20px;
-    margin-top: 1vh;
 }
 
 .coin-count {
-    font-size: 1.1rem;
+    font-size: 3rem;
     font-weight: bold;
-    margin-right: 0.5vw;
+    margin-bottom: 0.5vh;
 }
 
+/* TODO: use percentages and vh/vw instead of rem */
+
 .coin-image {
-    width: 1.2rem;
-    height: 1.2rem;
+    width: 4rem;
+    height: 4rem;
 }
 
 /* Opponent wallet should be smaller */
@@ -29,12 +30,12 @@
 }
 
 .opponent-station .coin-count {
-    font-size: 0.9rem;
+    font-size: 2rem;
 }
 
 .opponent-station .coin-image {
-    width: 0.9rem;
-    height: 0.9rem;
+    width: 3rem;
+    height: 3rem;
 }
 
 /* Player wallet styling */

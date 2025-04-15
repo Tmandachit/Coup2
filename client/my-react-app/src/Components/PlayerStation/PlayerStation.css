@@ -25,9 +25,10 @@
     flex-direction: column;
     align-items: center;
     border-radius: 10px;
-    padding: 1.5vh 2vw;
+    padding: 1vh;
     transition: transform 0.2s;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #25f337;
 }
 
 .station:hover {
@@ -39,6 +40,7 @@
     width: 15vw;
     min-width: 140px;
     max-width: 180px;
+    max-height: 300px;
     background-color: #213f7a;
     color: white;
     margin: 0 1vw;
@@ -46,19 +48,19 @@
 
 /* Player station - larger, above action buttons */
 .player-station {
-    width: 50vw;
+    width: 20vw;
     min-width: 300px;
     max-width: 700px;
-    background-color: #8096c1;
+    background-color: #80c190;
     color: white;
-    margin-bottom: 3vh;
-    padding: 2vh 3vw;
+    /* margin-bottom: 1vh; */
+    /* padding: 2vh 3vw; */
     /* Add margin to create more separation from opponents */
-    margin-top: 6vh;
+    /* margin-top: 6vh; */
 }
 
 .player-name {
-    font-size: 1.2rem;
+    font-size: 2rem;
     margin: 0 0 1vh 0;
     font-weight: bold;
 }
@@ -69,25 +71,32 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 1vw;
-    margin-bottom: 1.5vh;
+    /* gap: 1vw; */
+    margin-bottom: 0.5vh;
     width: 100%;
 }
 
 /* Adjust card sizes based on station type */
 .opponent-station .card-container {
     transform: scale(0.6);
-    margin: -1.5vh -1vw;
+    margin: -3vh -1vw;
+}
+
+/* Make sure wallet takes less space in player station */
+.opponent-station .wallet-container {
+    flex: 1;
+    max-width: 100px;
+    /* margin-top: 0.25vh; */
 }
 
 .player-station .card-container {
-    transform: scale(1.2); /* Make cards bigger for the client player */
-    margin: -0.5vh 0;
+    transform: scale(1.1); /* Make cards bigger for the client player */
+    margin: 5% 1vw 2.5% 1vw;
     flex: 3; /* Make cards take up more space */
 }
 
 /* Make sure wallet takes less space in player station */
 .player-station .wallet-container {
     flex: 1;
-    margin-top: 1vh;
+    /* margin-top: 0.25vh; */
 }

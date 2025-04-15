@@ -29,7 +29,7 @@ const Game = () => {
     socket.emit('join-game', { lobbyCode });
   
     const handleGameUpdate = (gameData) => {
-      // 🛡️ Defensive guard — only update if the component is mounted
+      // Defensive guard — only update if the component is mounted
       setPlayers(gameData.players);
     };
   

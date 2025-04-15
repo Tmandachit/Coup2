@@ -11,7 +11,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding-top: 4vh;
   padding-bottom: 4vh;
   flex: 1;
   gap: 6vh; /* Increased gap to create more space between sections */
@@ -82,7 +81,7 @@
   display: flex;
   justify-content: center;
   width: 90%;
-  margin: 5vh 0; /* Increased vertical margin for better spacing */
+  margin: 5vh 0 0 0; /* Increased vertical margin for better spacing */
 }
 
 /* Action Buttons Container - Fixed to ensure all buttons in one row */
