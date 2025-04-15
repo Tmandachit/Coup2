@@ -39,13 +39,16 @@ export default function PlayerStation({ player, isOpponent }) {
                 {isOpponent ? (
                     // For opponents, show face-down cards based on influenceCount
                     Array.from({ length: player.influenceCount }).map((_, index) => (
+                        console.log('Opponent card: ', _),
                         <Card key={index} role="Unknown" isRevealed={false} />
                     ))
                 ) : (
                     // For client player, show actual influence cards
                     Array.isArray(player.influences) && player.influences.map((card, index) => (
-                        <Card key={index} role={card.role} isRevealed={card.isRevealed} />
+                        console.log('Player card: ', card.role),
+                        <Card key={index} role={card.role} isRevealed={true} />
                     ))
+                    
                 )}
             </div>
             <Wallet coins={player.money} />

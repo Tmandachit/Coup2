@@ -12,15 +12,15 @@ export default function Card({ role, isRevealed}) {
     // Function to select the card image based on role
     const selectCard = (role) => {
         switch (role) {
-            case 'Assassin':
+            case 'assassin':
                 return Assassin;
-            case 'Ambassador':
+            case 'ambassador':
                 return Ambassador;
-            case 'Captain':
+            case 'captain':
                 return Captain;
-            case 'Contessa':
+            case 'contessa':
                 return Contessa;
-            case 'Duke':
+            case 'duke':
                 return Duke;
             default:
                 return FaceDown;
@@ -32,7 +32,7 @@ export default function Card({ role, isRevealed}) {
         ? selectCard(role)   // show card face if isRevealed is true
         : FaceDown; // show face-down card if isRevealed is false
     
-    console.log(imagePath)
+    console.log("card: ", role, " image path: ",imagePath)
 
     
 
