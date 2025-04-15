@@ -22,6 +22,14 @@ const Game = () => {
     };
   }, [socket, lobbyCode]);
 
+  const submitAction = (action, target = null) => {
+    socket.emit('submitAction', {
+      playerName: userName,
+      action,
+      target
+    });
+  };
+
   return (
     <div className="game-page">
       {/* Top Section: Rules & Cheat Sheet */}
@@ -70,13 +78,13 @@ const Game = () => {
   
         {/* Action Buttons */}
         <div className='action-buttons-container'>
-          <button className='income-button'>Income</button>
-          <button className='coup-button'>Coup</button>
-          <button className='foreign-aid-button'>Foreign Aid</button>
-          <button className='steal-button'>Steal</button>
-          <button className='assassinate-button'>Assassinate</button>
-          <button className='tax-button'>Tax</button>
-          <button className='exchange-button'>Exchange</button>
+          <button className='income-button' onClick={() => submitAction('INCOME')}>Income</button>
+          <button className='coup-button' onClick={() => submitAction('COUP')}>Coup</button>
+          <button className='foreign-aid-button' onClick={() => submitAction('FOREIGN_AID')}>Foreign Aid</button>
+          <button className='steal-button' onClick={() => submitAction('STEAL')} >Steal</button>
+          <button className='assassinate-button' onClick={() => submitAction('ASSASSINATE')}>Assassinate</button>
+          <button className='tax-button' onClick={() => submitAction('TAX')}>Tax</button>
+          <button className='exchange-button' onClick={() => submitAction('EXCHANGE')}>Exchange</button>
         </div>
       </main>
   

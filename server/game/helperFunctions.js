@@ -74,6 +74,25 @@ const generateSixDigitCode = () => {
     return Math.floor(100000 + Math.random() * 900000);
 };
 
+// Update the game state at every action
+const updateGameState() {
+    for (let i = 0; i < this.players.length; i++) {
+      const player = this.players[i];
+      this.gameSocket[i].emit('gameState', {
+        you: player,
+        allPlayers: this.players.map(p => ({
+          name: p.name,
+          coins: p.coins,
+          influenceCount: p.influences.filter(card => !card.revealed).length,
+          isDead: p.isDead
+        })),
+        currentPlayer: this.players[this.currentPlayer].name
+      });
+    }
+  }
+
+
+
 module.exports = {
     generateSixDigitCode,
     buildDeck,
