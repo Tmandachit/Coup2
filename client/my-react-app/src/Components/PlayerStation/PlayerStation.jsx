@@ -6,6 +6,7 @@ import './PlayerStation.css';
 
 
 export default function  PlayerStation({ player, opponent }) {
+
     // player is an object with the following properties:
     // name, coins, influences, eliminated, lobby, user_id
 
