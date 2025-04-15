@@ -32,6 +32,8 @@
     white-space: nowrap; /* Ensures no wrapping */
     overflow: hidden;
     text-overflow: ellipsis;
+    cursor: pointer;
+    user-select: none; 
 }
 
 /* Input and Button styling */
@@ -124,3 +126,5 @@ background-color: #e74c3c !important;
     cursor: not-allowed;
     opacity: 0.6;
   }
+
+  

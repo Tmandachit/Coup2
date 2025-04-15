@@ -56,44 +56,70 @@ const Lobby = () => {
     socket.emit('start-game', { lobbyCode });
   };
 
+  // Leave lobby function
+  const handleLeaveLobby = () => {
+    socket.emit('leave-lobby', { lobbyCode, userName });
+    navigate('/Home');
+  };
+
+
   return (
     <div className="lobbyContainer">
       <div className="lobbyContent">
-        <h1 className="lobbyCode">Lobby Code: {lobbyCode}</h1>
-        <h2>Players:</h2>
-        <ul className="lobbyList">
-          {players.map((player, index) => (
-            <li
-  key={index}
-  className={player.ready ? 'playerReady' : 'playerNotReady'}
->
-  {player.name} - {player.ready ? 'Ready' : 'Not Ready'}
-</li>
-
-          ))}
-        </ul>
-
-        {/* Ready Up Button */}
-        <button
-          className="readyUpButton"
+        <h1
+          className="lobbyCode"
+          title="Click to copy"
           onClick={() => {
-            console.log(`${isReady ? 'Unreadying' : 'Readying'} as`, { lobbyCode, userName });
-            socket.emit('playerReady', { lobbyCode, userName, ready: !isReady });
-            setIsReady(!isReady);
+            navigator.clipboard.writeText(lobbyCode)
+              .then(() => alert('Lobby code copied!'))
+              .catch(err => console.error('Failed to copy:', err));
           }}
         >
-          {isReady ? 'Unready' : 'Ready Up'}
-        </button>
+          Lobby Code: {lobbyCode}
+        </h1>
+
+        <h2>Players:</h2>
+
+        <ul className="lobbyList">
+            {players.map((player, index) => (
+              <li
+                  key={index}
+                  className={player.ready ? 'playerReady' : 'playerNotReady'}
+                >
+                  {player.name} - {player.ready ? 'Ready' : 'Not Ready'}
+              </li>
+             ))}     
+        </ul>
+
+          {/* Ready Up Button */}
+          <button
+            className="readyUpButton"
+            onClick={() => {
+              console.log(`${isReady ? 'Unreadying' : 'Readying'} as`, { lobbyCode, userName });
+              socket.emit('playerReady', { lobbyCode, userName, ready: !isReady });
+              setIsReady(!isReady);
+            }}
+          >
+            {isReady ? 'Unready' : 'Ready Up'}
+          </button>
 
 
-        {/* Start Game Button */}
-        <button
-          className="startGameButton"
-          onClick={handleStartGame}
-          disabled={!allReady || gameStarted}
-        >
-          {gameStarted ? "Game Starting..." : "Start Game"}
-        </button>
+          {/* Start Game Button */}
+          <button
+            className="startGameButton"
+            onClick={handleStartGame}
+            disabled={!allReady || gameStarted}
+          >
+            {gameStarted ? "Game Starting..." : "Start Game"}
+          </button>
+          {/* Leave Lobby Button */}
+          <button
+            className="leaveLobbyButton"
+            onClick={handleLeaveLobby}
+          >
+            Leave Lobby
+          </button>
+
       </div>
     </div>
   );
