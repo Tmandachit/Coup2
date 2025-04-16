@@ -7,7 +7,6 @@ import Lobby from "./Components/Lobby/Lobby";
 import Game from "./Components/Game/Game";
 import Profile from "./Components/Profile/Profile";
 import "./index.css"
-import Gameboard from "./Components/Gameboard/Gameboard";
 function App() {
   return (
     <Router>
@@ -20,7 +19,6 @@ function App() {
         <Route path="/Join" element={<JoinLobby />} /> 
         <Route path="/game" element={<Game />} />
         <Route path="/profile" element={<Profile />} />            
-        <Route path="/Gameboard" element={<Gameboard />} />      
       </Routes>
     </Router>
   );
