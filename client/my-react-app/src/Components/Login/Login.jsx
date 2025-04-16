@@ -2,10 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Login.css";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -14,26 +15,26 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const response = await axios.post("http://localhost:5001/login", formData);
+      const response = await axios.post("http://localhost:5001/login", formData);
 
-        if (response.status === 200) {
-            alert("Login successful!");
+      if (response.status === 200) {
+        toast.success("Login successful!");
 
-            sessionStorage.setItem("userId", response.data.userId);
-            sessionStorage.setItem("firstName", response.data.firstName);
-            sessionStorage.setItem("lastName", response.data.lastName);
-            sessionStorage.setItem("gamesPlayed", response.data.gamesPlayed);
-            sessionStorage.setItem("gamesWon", response.data.gamesWon);
+        sessionStorage.setItem("userId", response.data.userId);
+        sessionStorage.setItem("firstName", response.data.firstName);
+        sessionStorage.setItem("lastName", response.data.lastName);
+        sessionStorage.setItem("gamesPlayed", response.data.gamesPlayed);
+        sessionStorage.setItem("gamesWon", response.data.gamesWon);
 
-            navigate("/home");
-        } else {
-            alert(response.data.message || "Invalid username or password.");
-        }
+        navigate("/home");
+      } else {
+        toast.error(response.data.message || "Invalid username or password.");
+      }
     } catch (error) {
-        alert("Error: " + (error.response?.data?.message || "Something went wrong"));
-        console.error("Login error:", error);
+      toast.error("Error: " + (error.response?.data?.message || "Something went wrong"));
+      console.error("Login error:", error);
     }
-};
+  };
 
   return (
     <div className="login-container">
