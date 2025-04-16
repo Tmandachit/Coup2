@@ -31,10 +31,6 @@ export default function Card({ role, isRevealed}) {
     const imagePath = isRevealed 
         ? selectCard(role)   // show card face if isRevealed is true
         : FaceDown; // show face-down card if isRevealed is false
-    
-    console.log("card: ", role, " image path: ",imagePath)
-
-    
 
     return (
         <div className="card-container">

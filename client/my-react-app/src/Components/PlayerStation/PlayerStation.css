@@ -1,25 +1,3 @@
-/* .station {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-/* make sure cards are displayed in a row 
-.cards-container {
-    /* display: flex;
-    flex-direction: row;
-    align-items: center;
-    text-align: center;
-    margin-top: 20px; 
-
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 30px;
-} */
-
-
 .station {
     display: flex;
     flex-direction: column;
