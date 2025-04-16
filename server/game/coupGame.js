@@ -17,6 +17,35 @@ class Game {
     }
     console.log("Game initialized, players dealt:", this.players);
   }
+
+  getPlayerView(socketID) {
+    console.log("Getting player view for socket:", socketID);
+    // console.log("Current player:", this.nameSocketMap[player.name]);
+    const playerView = this.players.map((player) => {
+      const isSelf = this.nameSocketMap[player.name] === socketID;
+      // console.log("is self:", isSelf);
+      console.log(`Player: ${player.name}, socket: ${this.nameSocketMap[player.name]}, isSelf: ${isSelf}`);
+
+      if (isSelf) {
+        return {
+          name: player.name,
+          money: player.money,
+          influences: player.influences,
+          isDead: player.isDead
+        };
+      } else {
+        return {
+          name: player.name,
+          money: player.money,
+          influenceCount: player.influences.filter(i => i !== null).length,
+          isDead: player.isDead
+        };
+      }
+    });
+    
+    console.log("Player view:", playerView);
+    return playerView;
+  }
 }
 
 module.exports = Game;

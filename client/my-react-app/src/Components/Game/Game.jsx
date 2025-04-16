@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import rulesImage from './CoupRule.png';
 import cheatSheetImage from './CoupCheatSheet.png';
 import useSocket from '../../Socket/useSocket';
+import PlayerStation from '../PlayerStation/PlayerStation';
 import "./Game.css";
 
 const Game = () => {
@@ -28,16 +29,27 @@ const Game = () => {
   };
 
   useEffect(() => {
+    if (!socket || !lobbyCode) return;
+  
     socket.emit('join-game', { lobbyCode });
-
-    socket.on('game-update', (gameData) => {
+  
+    const handleGameUpdate = (gameData) => {
+      // Defensive guard — only update if the component is mounted
       setPlayers(gameData.players);
-    });
-
+    };
+  
+    socket.on('game-update', handleGameUpdate);
+  
     return () => {
-      socket.off('game-update');
+      socket.off('game-update', handleGameUpdate);
     };
   }, [socket, lobbyCode]);
+  
+
+  // Find the current player
+  const currentPlayer = players.find(p => p.name === userName);
+  // Get all opponent players
+  const opponents = players.filter(p => p.name !== userName);
 
   return (
     <div className="game-page">
@@ -58,44 +70,31 @@ const Game = () => {
       )}
 
       <main className="game-layout">
-        {/* Opponent Cards */}
-        <div className='player-cards'>
-          {players
-            .filter((p) => p.name !== userName)
-            .map((player, index) => (
-              <div key={index} className='player-card'>
-                <h2>{player.name}</h2>
-                <p>Coins: {player.money}</p>
-                <div className='card-placeholders'>
-                  {Array.from({ length: player.influences.length }).map((_, i) => (
-                    <div key={i} className='card-placeholder'></div>
-                  ))}
-                </div>
-              </div>
+        {/* Opponent Cards Section */}
+        <div className='opponents-container'>
+          {opponents.map((player, index) => (
+            <PlayerStation 
+              key={index} 
+              player={player} 
+              isOpponent={true} 
+              influences={[]}
+            />
           ))}
         </div>
-
-        {/* Player Section */}
-        {players.length > 0 && (
-          <div className='my-player-card-container'>
-            {players
-              .filter((p) => p.name === userName)
-              .map((player, index) => (
-                <div key={index} className="my-player-card">
-                  <p className="my-player-coins">Coins: {player.money}</p>
-                  <div className="my-cards-container">
-                    {player.influences.map((card, i) => (
-                      <div key={i} className={`my-card card-${card.toLowerCase()}`}>
-                        {card}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-            ))}
+        {/* Player Section - with greater separation */
+        console.log("Current player:", currentPlayer)
+        }
+        {currentPlayer && (
+          <div className='player-container'>
+            <PlayerStation 
+              player={currentPlayer} 
+              isOpponent={false} 
+              influences={currentPlayer.influences}
+            />
           </div>
         )}
-
-        {/* Action Buttons */}
+  
+        {/* Action Buttons - Fixed layout */}
         <div className='action-buttons-container'>
           <button className='income-button'>Income</button>
           <button className='coup-button'>Coup</button>

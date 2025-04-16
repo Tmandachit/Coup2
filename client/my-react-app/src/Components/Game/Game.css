@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   background-color: #e3f2fd;
+  position: relative;
 }
 
 .game-layout {
@@ -10,239 +11,165 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding-top: 40px;
-  padding-bottom: 40px;
+  padding-bottom: 4vh;
   flex: 1;
-  gap: 40px;
+  gap: 6vh; /* Increased gap to create more space between sections */
 }
 
 .top-left-buttons {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    display: flex;
-    gap: 8px;
-  }
-  
-  .small-button {
-    padding: 5px 10px;
-    font-size: 1rem;
-    background-color: #3498db;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .small-button:hover {
-    background-color: #2d4c61;
-  }  
+  position: absolute;
+  top: 1vh;
+  left: 1vw;
+  display: flex;
+  gap: 0.5vw;
+}
 
-  .event-log {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 250px;
-    height: 400px;
-    background-color: #A3CAE9;
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    border: 3px solid #6E9FC1; 
-    overflow-y: auto;
-  }
-  
-  .event-log h2 {
-    font-size: 16px;
-    margin-bottom: 8px;
-    border-bottom: 1px solid #6E9FC1;
-    color: #395A7F;
-    padding-bottom: 5px;
-  }
-  
-  .event-log p {
-    font-size: 14px;
-    color: white;
-  }  
+.small-button {
+  padding: 0.5vh 1vw;
+  font-size: 1rem;
+  background-color: #3498db;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+}
 
-  .player-cards {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 50px;
-  }
-  
-  .player-card {
-    width: 150px;
-    height: 120px;
-    padding: 10px;
-    background-color: #213f7a;
-    border-radius: 8px;
-    text-align: center;
-    color: white;
-    font-weight: bold;
-  }
+.small-button:hover {
+  background-color: #2d4c61;
+}  
 
-  .player-card p {
-    margin: 5px 0;
-    font-size: 1rem;
-  }
+.event-log {
+  position: absolute;
+  top: 1vh;
+  right: 1vw;
+  width: 20vw;
+  max-width: 250px;
+  height: 40vh;
+  background-color: #A3CAE9;
+  color: white;
+  padding: 1vh 1vw;
+  border-radius: 5px;
+  border: 3px solid #6E9FC1; 
+  overflow-y: auto;
+}
 
-  .player-card h2 {
-    font-size: 1.2rem;
-  }
-  
-  .card-placeholders {
-    display: flex;
-    justify-content: center;
-    gap: 5px;
-    margin-top: 5px;
-  }
-  
-  .card-placeholder {
-    width: 30px;
-    height: 40px;
-    background-color: white;
-    border-radius: 4px;
-  }
+.event-log h2 {
+  font-size: 1rem;
+  margin-bottom: 1vh;
+  border-bottom: 1px solid #6E9FC1;
+  color: #395A7F;
+  padding-bottom: 0.5vh;
+}
 
-  .my-player-card-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 30px;
-  }
-  
+.event-log p {
+  font-size: 0.9rem;
+  color: white;
+}  
 
-  .my-player-card {
-    width: 300px;
-    padding: 15px;
-    background-color: #8096c1; /* Dark background */
-    color: white;
-    border-radius: 10px;
-    text-align: center;
-    margin-top: 20px;
-  }
-  
-  .my-player-coins {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  .my-cards-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .my-card {
-    width: 80px;
-    height: 120px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    text-align: center;
-    color: white;
-    padding: 10px;
-  }
-  
-  /* Different colors for different card types */
-  .card-captain {
-    background-color: #62c1d4; /* Blue */
-  }
-  
-  .card-ambassador {
-    background-color: #20cb61; /* Orange */
-  }
-  
+/* New styling for opponent container */
+.opponents-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2vw;
+  margin-top: 4vh; /* Add more top margin */
+  width: 90%;
+}
 
-/* Button Container */
+/* New styling for player container */
+.player-container {
+  display: flex;
+  justify-content: center;
+  width: 90%;
+  margin: 5vh 0 0 0; /* Increased vertical margin for better spacing */
+}
+
+/* Action Buttons Container - Fixed to ensure all buttons in one row */
 .action-buttons-container {
-    display: flex;
-    justify-content: center;
-    padding: 15px;
-    background-color: #404449;
-    border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  padding: 1.5vh 2vw;
+  background-color: #404449;
+  border-radius: 10px;
+  gap: 0.8vw;
+  width: 90%;
+  max-width: 1000px;
+}
+
+/* Fixed Individual Button Styles */
+.action-buttons-container button {
+  color: white;
+  padding: 1vh 0.6vw; /* Reduced horizontal padding */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  font-size: 0.9rem; /* Slightly smaller font to fit */
+  white-space: nowrap; /* Prevent text wrapping */
+  min-width: 0; /* Allow buttons to shrink if needed */
+  flex: 1; /* Equal width distribution */
+}
+
+.income-button {
+  background-color: #797f86;
+}
+
+.coup-button {
+  background-color: #797f86;
+}
+
+.foreign-aid-button {
+  background-color: #797f86;
+}
+
+.steal-button {
+  background-color: #62c1d4;
+}
+
+.assassinate-button {
+  background-color: #000000;
+}
+
+.tax-button {
+  background-color: #742d9a;
+}
+
+.exchange-button {
+  background-color: #20cb61;
+}
+
+.action-buttons-container button:hover {
+  opacity: 0.8;
+  transform: translateY(-2px);
+}
+
+/* Make the game responsive */
+@media (max-width: 900px) {
+  .action-buttons-container {
+    width: 95%;
+    flex-wrap: wrap;
   }
   
-  /* Individual Button Styles */
-  .income-button {
-    background-color: #797f86;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 0 8px;
+  .action-buttons-container button {
+    padding: 1vh 2vw;
+    margin: 0.5vh 0;
+    flex-basis: 30%; /* Make buttons take up roughly a third of the container */
+  }
+}
+
+@media (max-width: 576px) {
+  .action-buttons-container {
+    flex-direction: column;
   }
   
-  .coup-button {
-    background-color: #797f86;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 0 8px;
-  }
-  
-  .foreign-aid-button {
-    background-color: #797f86;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 0 8px;
-  }
-  
-  .steal-button {
-    background-color: #62c1d4;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 0 8px;
+  .action-buttons-container button {
+    width: 100%;
+    margin: 0.5vh 0;
   }
 
-  .assassinate-button {
-    background-color: #000000;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 0 8px;
-  }
+}
 
-  .tax-button {
-    background-color: #742d9a;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 0 8px;
-  }
-
-  .exchange-button {
-    background-color: #20cb61;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 0 8px;
-  }
-
-  button:hover {
-    opacity: 0.8;
-  }
   
   .popup-overlay {
     position: fixed;
@@ -289,4 +216,4 @@
     cursor: pointer;
     padding: 0;
   }
-  
+
