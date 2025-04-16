@@ -35,6 +35,9 @@ const lobbies = {};
 const games = {};
 const userSockets = {}; 
 
+// Const variables
+const MAX_PLAYERS_PER_LOBBY = 6;
+
 // Helper function to generate a unique 6-digit code
 function generateSixDigitCode() {
   return Math.floor(100000 + Math.random() * 900000).toString(); 
@@ -231,6 +234,15 @@ io.on('connection', (socket) => {
       return;
     }
 
+    // Enfore player limit
+    if (lobbies[lobby].length >= MAX_PLAYERS_PER_LOBBY) {
+      console.log(`Lobby ${lobby} is full.`);
+      if (callback && typeof callback === "function") {
+        callback({ status: "error", message: "Lobby is full" });
+      }
+      return;
+    }
+
     if (!lobbies[lobby].some(player => player.name === username)) {
       lobbies[lobby].push({ name: username, ready: false });
       userSockets[socket.id] = { username, lobby };
@@ -245,6 +257,20 @@ io.on('connection', (socket) => {
       callback({ status: "ok" });
     }
   });
+
+  // Handle Leave lobby
+  socket.on('leave-lobby', ({ lobbyCode, userName }) => {
+    if (lobbies[lobbyCode]) {
+      lobbies[lobbyCode] = lobbies[lobbyCode].filter(p => p.name !== userName);
+      io.to(lobbyCode).emit('lobby-update', lobbies[lobbyCode]);
+  
+      if (lobbies[lobbyCode].length === 0) {
+        delete lobbies[lobbyCode];
+        console.log(`Lobby ${lobbyCode} deleted (everyone left).`);
+      }
+    }
+  });
+  
 
   // Handle Ready Up
   socket.on('playerReady', ({ lobbyCode, userName, ready }) => {

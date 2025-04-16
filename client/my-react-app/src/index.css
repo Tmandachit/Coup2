@@ -113,3 +113,9 @@ input:focus {
   outline: none;
   box-shadow: 0px 0px 5px rgba(30, 136, 229, 0.5);
 }
+
+.Toastify__close-button {
+  width: auto !important;
+  height: auto !important;
+  padding: 0.5rem !important;
+}
