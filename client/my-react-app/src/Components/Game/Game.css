@@ -216,4 +216,18 @@
     cursor: pointer;
     padding: 0;
   }
+  
+  .turn-indicator {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  button:disabled {
+    background-color: #b0b0b0 !important;
+    color: #eeeeee;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
 
