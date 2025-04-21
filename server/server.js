@@ -16,9 +16,9 @@ const server = createServer(app);
 // Initialize Socket.IO server with CORS configuration
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:5173'],               
-    methods: ['GET', 'POST'],                        
-    credentials: true,                               
+    origin: ['http://localhost:5173'],                // Allowed client origin for socket connections
+    methods: ['GET', 'POST'],                         // Allowed HTTP methods
+    credentials: true,                                // Allow credentials (cookies, headers, etc.)
   },
 });
 
@@ -35,12 +35,16 @@ const lobbies = {};
 const games = {};
 const userSockets = {}; 
 
+// Const variables
+const MAX_PLAYERS_PER_LOBBY = 6;
+
 // Helper function to generate a unique 6-digit code
 function generateSixDigitCode() {
   return Math.floor(100000 + Math.random() * 900000).toString(); 
 }
 
 // User Registration
+
 app.post("/register", async (req, res) => {
   const { firstName, lastName, email, username, password } = req.body;
 
@@ -215,7 +219,8 @@ app.get('/lobby/:lobbyCode/players', (req, res) => {
   }
 });
 
-// Socket.IO connection handler
+
+// Socket.IO connection handler for real-time events
 io.on('connection', (socket) => {
   console.log(`User connected: ${socket.id}`);
 
@@ -225,6 +230,15 @@ io.on('connection', (socket) => {
       console.error(`Lobby ${lobby} does not exist.`);
       if (callback && typeof callback === "function") {
         callback({ status: "error", message: "Lobby does not exist" });
+      }
+      return;
+    }
+
+    // Enfore player limit
+    if (lobbies[lobby].length >= MAX_PLAYERS_PER_LOBBY) {
+      console.log(`Lobby ${lobby} is full.`);
+      if (callback && typeof callback === "function") {
+        callback({ status: "error", message: "Lobby is full" });
       }
       return;
     }
@@ -243,6 +257,20 @@ io.on('connection', (socket) => {
       callback({ status: "ok" });
     }
   });
+
+  // Handle Leave lobby
+  socket.on('leave-lobby', ({ lobbyCode, userName }) => {
+    if (lobbies[lobbyCode]) {
+      lobbies[lobbyCode] = lobbies[lobbyCode].filter(p => p.name !== userName);
+      io.to(lobbyCode).emit('lobby-update', lobbies[lobbyCode]);
+  
+      if (lobbies[lobbyCode].length === 0) {
+        delete lobbies[lobbyCode];
+        console.log(`Lobby ${lobbyCode} deleted (everyone left).`);
+      }
+    }
+  });
+  
 
   // Handle Ready Up
   socket.on('playerReady', ({ lobbyCode, userName, ready }) => {
@@ -314,9 +342,33 @@ io.on('connection', (socket) => {
     console.log(`${socket.id} joined game room ${lobbyCode}`);
   
     const game = games[lobbyCode];
+
+    // ensure that full player data is only sent to corresponding user, with only public info for others
     if (game) {
-      socket.emit('game-update', {
-        players: game.players
+      // const socketUser = userSockets[socket.id];
+      // const yourName = socketUser?.username;
+
+      // const sanitizedPlayers = game.players.map((player) => {
+      //   if (player.name === yourName) {
+      //     // Send full data for current player
+      //     return player;
+      //   } else {
+      //     // Send only public info for opponents
+      //     return {
+      //       name: player.name,
+      //       money: player.money,
+      //       influenceCount: player.influences.length // just send the amount of influence cards
+      //     };
+      //   }
+      // });
+
+      // const playerData = game.getPlayerView(socket.id);
+
+      // emit game-update event on a player-by-player basis - not all players receive the same data
+      game.players.forEach(player => {
+        const socketId = game.nameSocketMap[player.name];
+        const playerData = game.getPlayerView(socketId);
+        io.to(socketId).emit('game-update', { players: playerData });
       });
     } else {
       console.warn(`No game found for lobby ${lobbyCode}`);

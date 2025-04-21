@@ -1,0 +1,36 @@
+.card-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+}
+
+.card-image { 
+    border-radius: 10px;
+    box-shadow: 0 0.4vh 1vw rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease-in-out;
+    width: 100%;
+    max-width: 120px;
+    height: auto;
+}
+
+.card-image:hover {
+    transform: translateY(-5px);
+}
+
+.card-title {
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-top: 0.5vh;
+    color: inherit;
+}
+
+/* Player's card should be larger */
+.player-station .card-image {
+    max-width: 150px;
+}
+
+.player-station .card-title {
+    font-size: 1.1rem;
+}
