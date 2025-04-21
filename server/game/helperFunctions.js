@@ -74,18 +74,6 @@ const generateSixDigitCode = () => {
     return Math.floor(100000 + Math.random() * 900000);
 };
 
-// Update the game state at every action
-function updateGameState(gameInstance, io, lobbyCode) {
-    io.to(lobbyCode).emit('game-update', {
-      players: gameInstance.players,
-      currentPlayer: gameInstance.players[gameInstance.currentPlayer].name
-    });
-  }
-  
-  function broadcast(io, lobbyCode, message) {
-    io.to(lobbyCode).emit('game-log', message);
-  }
-
 module.exports = {
     generateSixDigitCode,
     buildDeck,
@@ -93,7 +81,5 @@ module.exports = {
     buildPlayers,
     exportPlayers,
     buildNameSocketMap,
-    buildNameIndexMap,
-    updateGameState,
-    broadcast
+    buildNameIndexMap
 };
