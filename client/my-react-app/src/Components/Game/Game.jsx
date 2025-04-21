@@ -11,18 +11,22 @@ const Game = () => {
   const lobbyCode = searchParams.get('lobby');
   const socket = useSocket();
   const userName = sessionStorage.getItem("userId");
+
   const [players, setPlayers] = useState([]);
   const [eventLog, setEventLog] = useState([]);
   const [currentPlayer, setCurrentPlayer] = useState("");
+  const [pendingAction, setPendingAction] = useState(null);
+  const [isSelectingTarget, setIsSelectingTarget] = useState(false);
+  const [awaitingResponse, setAwaitingResponse] = useState(null);
 
-  // New: Popup state
+
   const [popupImage, setPopupImage] = useState(null);
 
   const handleShowPopup = (type) => {
     if (type === 'rules') {
       setPopupImage(rulesImage);
     } else if (type === 'cheatsheet') {
-      setPopupImage(cheatSheetImage); 
+      setPopupImage(cheatSheetImage);
     }
   };
 
@@ -30,10 +34,8 @@ const Game = () => {
     setPopupImage(null);
   };
 
-  // Action Handling
-
   const submitAction = (action, target = null) => {
-    console.log(`Action: ${action} Target: ${target}`)
+    console.log(`Action: ${action} Target: ${target}`);
     socket.emit('submit-action', {
       playerName: userName,
       action,
@@ -46,44 +48,48 @@ const Game = () => {
       setEventLog(prev => [log, ...prev]);
     });
   
+    socket.on('awaiting-response', (data) => {
+      console.log("Received challenge/block prompt:", data);
+      setAwaitingResponse(data);
+    });
+  
     return () => {
       socket.off('game-log');
+      socket.off('awaiting-response');
     };
   }, [socket]);
+  
 
   useEffect(() => {
     if (!socket || !lobbyCode) return;
-  
+
     socket.emit('join-game', { lobbyCode });
-  
+
     const handleGameUpdate = (gameData) => {
+      console.log("Received game update:", gameData);
       setPlayers(gameData.players);
       setCurrentPlayer(gameData.currentPlayer);
     };
-  
+
     socket.on('game-update', handleGameUpdate);
-  
+
     return () => {
       socket.off('game-update', handleGameUpdate);
     };
   }, [socket, lobbyCode]);
-  
 
-  // Find the current player
   const myPlayer = players.find(p => p.name === userName);
-
-  // Get all opponent players
   const opponents = players.filter(p => p.name !== userName);
 
   return (
     <div className="game-page">
-      {/* Top Section: Rules & Cheat Sheet */}
+      {/* Rules & Cheatsheet buttons */}
       <div className='top-left-buttons'>
         <button className='small-button' onClick={() => handleShowPopup('rules')}>Rules</button>
         <button className='small-button' onClick={() => handleShowPopup('cheatsheet')}>Cheat Sheet</button>
       </div>
 
-      {/* Fullscreen Image Popup */}
+      {/* Popup Overlay */}
       {popupImage && (
         <div className="popup-overlay">
           <div className="popup-content">
@@ -94,100 +100,138 @@ const Game = () => {
       )}
 
       <main className="game-layout">
-        {/* Opponent Cards Section */}
+        {/* Opponent Cards */}
         <div className='opponents-container'>
           {opponents.map((player, index) => (
             <PlayerStation 
-              key={index} 
-              player={player} 
-              isOpponent={true} 
-              influences={[]}
+              key={index}
+              player={player}
+              isOpponent={true}
+              isTargetable={isSelectingTarget}
+              onTargetClick={(targetName) => {
+                submitAction(pendingAction, targetName);
+                setPendingAction(null);
+                setIsSelectingTarget(false);
+              }}
             />
           ))}
         </div>
-        {/* Player Section - with greater separation */
-        console.log("Current player:", myPlayer)
-        }
+
+        {/* Player Card */}
         {myPlayer && (
           <div className='player-container'>
             <PlayerStation 
-              player={myPlayer} 
-              isOpponent={false} 
+              player={myPlayer}
+              isOpponent={false}
               influences={myPlayer.influences}
             />
           </div>
         )}
-  
-        {/* Action Buttons - Fixed layout */}
+
+        {/* Turn Indicator */}
+        <div className="turn-indicator">
+          {currentPlayer
+            ? (currentPlayer === userName
+                ? "Your Turn!"
+                : `${currentPlayer}'s Turn`)
+            : "Waiting for game to start..."}
+        </div>
+
+        {/* Action Buttons */}
         <div className='action-buttons-container'>
-          <button 
-            className='income-button' 
+          <button
+            className='income-button'
             onClick={() => submitAction('income')}
             disabled={currentPlayer !== userName}
           >
             Income
           </button>
-  
-          <button 
-            className='coup-button' 
-            onClick={() => submitAction('coup')}
+
+          <button
+            className='coup-button'
+            onClick={() => {
+              setPendingAction('coup');
+              setIsSelectingTarget(true);
+            }}
             disabled={currentPlayer !== userName}
           >
             Coup
           </button>
-  
-          <button 
-            className='foreign-aid-button' 
+
+          <button
+            className='foreign-aid-button'
             onClick={() => submitAction('foreign aid')}
             disabled={currentPlayer !== userName}
           >
             Foreign Aid
           </button>
-  
-          <button 
-            className='steal-button' 
-            onClick={() => submitAction('steal')} 
+
+          <button
+            className='steal-button'
+            onClick={() => {
+              setPendingAction('steal');
+              setIsSelectingTarget(true);
+            }}
             disabled={currentPlayer !== userName}
           >
             Steal
           </button>
-  
-          <button 
-            className='assassinate-button' 
-            onClick={() => submitAction('assassinate')} 
+
+          <button
+            className='assassinate-button'
+            onClick={() => {
+              setPendingAction('assassinate');
+              setIsSelectingTarget(true);
+            }}
             disabled={currentPlayer !== userName}
           >
             Assassinate
           </button>
-  
-          <button 
-            className='tax-button' 
-            onClick={() => submitAction('tax')} 
+
+          <button
+            className='tax-button'
+            onClick={() => submitAction('tax')}
             disabled={currentPlayer !== userName}
           >
             Tax
           </button>
-  
-          <button 
-            className='exchange-button' 
-            onClick={() => submitAction('exchange')} 
+
+          <button
+            className='exchange-button'
+            onClick={() => submitAction('exchange')}
             disabled={currentPlayer !== userName}
           >
             Exchange
           </button>
         </div>
+        {awaitingResponse && currentPlayer !== userName && (
+          <div className="challenge-block-container">
+            <p>
+              {awaitingResponse.actor} is attempting to {awaitingResponse.action}
+              {awaitingResponse.target ? ` against ${awaitingResponse.target}` : ''}.
+            </p>
+            <button onClick={() => socket.emit('challenge')}>Challenge</button>
+
+            {awaitingResponse.target === userName && (
+              <button onClick={() => socket.emit('block')}>Block</button>
+            )}
+
+            <button onClick={() => socket.emit('pass')}>Pass</button>
+          </div>
+        )}
+
       </main>
 
       {/* Event Log */}
       <div className='event-log'>
         <h2>Event Log:</h2>
         {eventLog.length === 0 ? (
-             <p>No game events yet.</p>
-           ) : (
-               eventLog.map((log, idx) => (
-                 <p key={idx}>{log}</p>
-               ))
-           )}
+          <p>No game events yet.</p>
+        ) : (
+          eventLog.map((log, idx) => (
+            <p key={idx}>{log}</p>
+          ))
+        )}
       </div>
     </div>
   );

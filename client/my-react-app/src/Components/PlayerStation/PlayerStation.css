@@ -78,3 +78,11 @@
     flex: 1;
     /* margin-top: 0.25vh; */
 }
+
+.station.targetable {
+    cursor: pointer;
+    border: 3px solid #fbc02d;
+    box-shadow: 0 0 10px #fbc02d;
+    transition: 0.2s ease;
+  }
+  
