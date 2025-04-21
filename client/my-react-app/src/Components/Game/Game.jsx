@@ -12,6 +12,8 @@ const Game = () => {
   const socket = useSocket();
   const userName = sessionStorage.getItem("userId");
   const [players, setPlayers] = useState([]);
+  const [eventLog, setEventLog] = useState([]);
+  const [currentPlayer, setCurrentPlayer] = useState("");
 
   // New: Popup state
   const [popupImage, setPopupImage] = useState(null);
@@ -28,14 +30,35 @@ const Game = () => {
     setPopupImage(null);
   };
 
+  // Action Handling
+
+  const submitAction = (action, target = null) => {
+    console.log(`Action: ${action} Target: ${target}`)
+    socket.emit('submit-action', {
+      playerName: userName,
+      action,
+      target
+    });
+  };
+
+  useEffect(() => {
+    socket.on('game-log', (log) => {
+      setEventLog(prev => [log, ...prev]);
+    });
+  
+    return () => {
+      socket.off('game-log');
+    };
+  }, [socket]);
+
   useEffect(() => {
     if (!socket || !lobbyCode) return;
   
     socket.emit('join-game', { lobbyCode });
   
     const handleGameUpdate = (gameData) => {
-      // Defensive guard — only update if the component is mounted
       setPlayers(gameData.players);
+      setCurrentPlayer(gameData.currentPlayer);
     };
   
     socket.on('game-update', handleGameUpdate);
@@ -47,7 +70,8 @@ const Game = () => {
   
 
   // Find the current player
-  const currentPlayer = players.find(p => p.name === userName);
+  const myPlayer = players.find(p => p.name === userName);
+
   // Get all opponent players
   const opponents = players.filter(p => p.name !== userName);
 
@@ -82,34 +106,88 @@ const Game = () => {
           ))}
         </div>
         {/* Player Section - with greater separation */
-        console.log("Current player:", currentPlayer)
+        console.log("Current player:", myPlayer)
         }
-        {currentPlayer && (
+        {myPlayer && (
           <div className='player-container'>
             <PlayerStation 
-              player={currentPlayer} 
+              player={myPlayer} 
               isOpponent={false} 
-              influences={currentPlayer.influences}
+              influences={myPlayer.influences}
             />
           </div>
         )}
   
         {/* Action Buttons - Fixed layout */}
         <div className='action-buttons-container'>
-          <button className='income-button'>Income</button>
-          <button className='coup-button'>Coup</button>
-          <button className='foreign-aid-button'>Foreign Aid</button>
-          <button className='steal-button'>Steal</button>
-          <button className='assassinate-button'>Assassinate</button>
-          <button className='tax-button'>Tax</button>
-          <button className='exchange-button'>Exchange</button>
+          <button 
+            className='income-button' 
+            onClick={() => submitAction('income')}
+            disabled={currentPlayer !== userName}
+          >
+            Income
+          </button>
+  
+          <button 
+            className='coup-button' 
+            onClick={() => submitAction('coup')}
+            disabled={currentPlayer !== userName}
+          >
+            Coup
+          </button>
+  
+          <button 
+            className='foreign-aid-button' 
+            onClick={() => submitAction('foreign aid')}
+            disabled={currentPlayer !== userName}
+          >
+            Foreign Aid
+          </button>
+  
+          <button 
+            className='steal-button' 
+            onClick={() => submitAction('steal')} 
+            disabled={currentPlayer !== userName}
+          >
+            Steal
+          </button>
+  
+          <button 
+            className='assassinate-button' 
+            onClick={() => submitAction('assassinate')} 
+            disabled={currentPlayer !== userName}
+          >
+            Assassinate
+          </button>
+  
+          <button 
+            className='tax-button' 
+            onClick={() => submitAction('tax')} 
+            disabled={currentPlayer !== userName}
+          >
+            Tax
+          </button>
+  
+          <button 
+            className='exchange-button' 
+            onClick={() => submitAction('exchange')} 
+            disabled={currentPlayer !== userName}
+          >
+            Exchange
+          </button>
         </div>
       </main>
 
       {/* Event Log */}
       <div className='event-log'>
         <h2>Event Log:</h2>
-        <p>Jane Doe's Turn</p>
+        {eventLog.length === 0 ? (
+             <p>No game events yet.</p>
+           ) : (
+               eventLog.map((log, idx) => (
+                 <p key={idx}>{log}</p>
+               ))
+           )}
       </div>
     </div>
   );

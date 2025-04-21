@@ -318,8 +318,7 @@ io.on('connection', (socket) => {
       socketID: sockets[index]
     }));
 
-    const game = new Game(playersWithSockets, sockets);
-
+    const game = new Game(playersWithSockets, sockets, io, lobbyCode);
     games[lobbyCode] = game;
   
     console.log(`Game instance created for lobby ${lobbyCode}`);
@@ -387,6 +386,24 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     console.log(`User disconnected: ${socket.id}`);
+  });
+
+  socket.on('submit-action', ({ playerName, action, target }) => {    
+    const user = userSockets[socket.id];
+    if (!user) return;
+  
+    const { lobby } = user;
+    const game = games[lobby];
+    if (!game) return;
+  
+    const currentPlayer = game.players[game.currentPlayer];
+
+    if (currentPlayer.name !== playerName) {
+      socket.emit('error-message', 'It is not your turn.');
+      return;
+    }
+  
+    game.handleSubmit(action, target);
   });
 });
 
