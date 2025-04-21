@@ -1,4 +1,4 @@
-const { buildNameSocketMap, buildNameIndexMap, buildPlayers, buildDeck, shuffle } = require('./helperFunctions');
+const { buildNameSocketMap, buildNameIndexMap, buildPlayers, buildDeck, shuffle, broadcast, updateGameState } = require('./helperFunctions');
 const { Actions } = require('./helperConstants');
 
 class Game {
@@ -12,9 +12,12 @@ class Game {
     this.actions = Actions;
     this.io = io;
     this.lobbyCode = lobbyCode;
+    this.awaitingResponse = null;
+    this.challengeWindowOpen = false;
+    this.challengeTimer = null;
   
     this.broadcast = (msg) => broadcast(this.io, this.lobbyCode, msg);
-    this.updateGameState = () => updateGameState(this, this.io, this.lobbyCode);
+    this.updateGameState = () => updateGameState(this, this.io);
   
     for (let player of this.players) {
       player.influences.push(this.deck.pop());
@@ -30,6 +33,15 @@ class Game {
     }
     this.currentPlayer = next;
   }
+
+  startChallengeTimer() {
+    if (this.challengeTimer) clearTimeout(this.challengeTimer);
+  
+    this.challengeTimer = setTimeout(() => {
+      this.resolveUnchallengedAction();
+    }, 10000);
+  }
+  
 
   handleSubmit(action, targetName = null) {
     console.log(`Handling action: ${action} Target: ${targetName}`)
@@ -50,10 +62,19 @@ class Game {
         this.broadcast(`${player.name} takes Foreign Aid (+2 coins).`);
         break;
   
-      case this.actions.TAX:
-        player.money += 3;
-        this.broadcast(`${player.name} takes Tax (+3 coins).`);
-        break;
+        case this.actions.TAX:
+          this.awaitingResponse = {
+            type: 'action',
+            action: 'tax',
+            actor: player.name,
+            requiredCard: 'duke'
+          };
+        
+          this.challengeWindowOpen = true;
+          this.broadcast(`${player.name} attempts to collect tax (+3 coins). Waiting for challenge...`);
+          this.startChallengeTimer();
+          return;
+        
   
       case this.actions.COUP:
         if (player.money < 7 || !target || target.isDead) return;
@@ -63,21 +84,37 @@ class Game {
         this.broadcast(`${player.name} coups ${target.name} (they lose a ${lostCard}).`);
         break;
   
-      case this.actions.STEAL:
-        if (!target || target.isDead) return;
-        const stolen = Math.min(2, target.money);
-        target.money -= stolen;
-        player.money += stolen;
-        this.broadcast(`${player.name} steals ${stolen} coin(s) from ${target.name}.`);
-        break;
+        case this.actions.STEAL:
+          if (!target || target.isDead) return;
+        
+          this.awaitingResponse = {
+            type: 'action',
+            action: 'steal',
+            actor: player.name,
+            target: target.name,
+            requiredCard: 'captain'
+          };
+        
+          this.challengeWindowOpen = true;
+          this.broadcast(`${player.name} attempts to steal from ${target.name}. Waiting for challenge...`);
+          this.startChallengeTimer();
+          return;
   
-      case this.actions.ASSASSINATE:
-        if (player.money < 3 || !target || target.isDead) return;
-        player.money -= 3;
-        const assassinatedCard = target.influences.pop();
-        if (target.influences.length === 0) target.isDead = true;
-        this.broadcast(`${player.name} assassinates ${target.name} (they lose a ${assassinatedCard}).`);
-        break;
+          case this.actions.ASSASSINATE:
+            if (player.money < 3 || !target || target.isDead) return;
+          
+            this.awaitingResponse = {
+              type: 'action',
+              action: 'assassinate',
+              actor: player.name,
+              target: target.name,
+              requiredCard: 'assassin'
+            };
+          
+            this.challengeWindowOpen = true;
+            this.broadcast(`${player.name} attempts to assassinate ${target.name}. Waiting for challenge...`);
+            this.startChallengeTimer();
+            return;
   
       default:
         return;
@@ -87,16 +124,44 @@ class Game {
 
     this.endTurn();
     this.updateGameState();
+  }
 
+  resolveUnchallengedAction() {
+    const { action, actor, target } = this.awaitingResponse;
+    const actorPlayer = this.players[this.nameIndexMap[actor]];
+    const targetPlayer = target ? this.players[this.nameIndexMap[target]] : null;
+
+    this.awaitingResponse = null;
+    this.challengeWindowOpen = false;
+
+    switch (action) {
+      case 'steal':
+        const stolen = Math.min(2, targetPlayer.money);
+        targetPlayer.money -= stolen;
+        actorPlayer.money += stolen;
+        this.broadcast(`${actor} successfully steals ${stolen} coin(s) from ${target}.`);
+        break;
+
+      case 'assassinate':
+        actorPlayer.money -= 3;
+        const lost = targetPlayer.influences.pop();
+        if (targetPlayer.influences.length === 0) targetPlayer.isDead = true;
+        this.broadcast(`${actor} successfully assassinates ${target} (they lose a ${lost}).`);
+        break;
+
+      case 'tax':
+        actorPlayer.money += 3;
+        this.broadcast(`${actor} successfully collects Tax (+3 coins).`);
+        break;
+    }
+
+    this.endTurn();
+    this.updateGameState();
   }
 
   getPlayerView(socketID) {
-    console.log("Getting player view for socket:", socketID);
-    // console.log("Current player:", this.nameSocketMap[player.name]);
     const playerView = this.players.map((player) => {
       const isSelf = this.nameSocketMap[player.name] === socketID;
-      // console.log("is self:", isSelf);
-      console.log(`Player: ${player.name}, socket: ${this.nameSocketMap[player.name]}, isSelf: ${isSelf}`);
 
       if (isSelf) {
         return {
@@ -115,7 +180,6 @@ class Game {
       }
     });
     
-    console.log("Player view:", playerView);
     return playerView;
   }
 }

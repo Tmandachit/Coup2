@@ -310,8 +310,6 @@ io.on('connection', (socket) => {
       return socketEntry ? socketEntry[0] : null;
     }).filter(Boolean);
   
-    // const game = new Game(players, sockets);
-
     // Attach socketID to each player
     const playersWithSockets = players.map((player, index) => ({
       ...player,
@@ -357,7 +355,10 @@ io.on('connection', (socket) => {
       game.players.forEach(player => {
         const socketId = game.nameSocketMap[player.name];
         const playerData = game.getPlayerView(socketId);
-        io.to(socketId).emit('game-update', { players: playerData });
+        io.to(socketId).emit('game-update', {
+          players: playerData,
+          currentPlayer: game.players[game.currentPlayer].name
+        });
       });
     } else {
       console.warn(`No game found for lobby ${lobbyCode}`);

@@ -219,10 +219,12 @@
   
   .turn-indicator {
     text-align: center;
+    font-size: 1.3rem;
     font-weight: bold;
-    font-size: 1.2rem;
-    margin-bottom: 10px;
+    margin-top: 20px;
+    color: #333;
   }
+  
   
   button:disabled {
     background-color: #b0b0b0 !important;
@@ -231,3 +233,32 @@
     opacity: 0.6;
   }
 
+  .target-selection {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #e9f0fb;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .target-selection select {
+    margin: 0 10px;
+    padding: 4px;
+  }  
+  
+  .challenge-block-container {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .challenge-block-container button {
+    margin: 0 5px;
+    padding: 8px 16px;
+    background-color: #8e44ad;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
