@@ -9,12 +9,18 @@ const Game = () => {
   const socket = useSocket();
   const userName = sessionStorage.getItem("userId");
   const [players, setPlayers] = useState([]);
+  const [eventLog, setEventLog] = useState([]);
+  const [currentPlayer, setCurrentPlayer] = useState("");
+
+
 
   useEffect(() => {
     socket.emit('join-game', { lobbyCode });
 
     socket.on('game-update', (gameData) => {
+      console.log("Received game update:", gameData);
       setPlayers(gameData.players);
+      setCurrentPlayer(gameData.currentPlayer);
     });
 
     return () => {
@@ -22,8 +28,20 @@ const Game = () => {
     };
   }, [socket, lobbyCode]);
 
+  useEffect(() => {
+    socket.on('game-log', (log) => {
+      setEventLog(prev => [log, ...prev]);
+    });
+  
+    return () => {
+      socket.off('game-log');
+    };
+  }, [socket]);
+  
+
   const submitAction = (action, target = null) => {
-    socket.emit('submitAction', {
+    console.log(`Action: ${action} Target: ${target}`)
+    socket.emit('submit-action', {
       playerName: userName,
       action,
       target
@@ -75,23 +93,83 @@ const Game = () => {
             ))}
           </div>
         )}
-  
+        {/* Turn Indicator */}
+        <h3 className="turn-indicator">
+          {currentPlayer === userName
+            ? "Your turn!"
+            : `${currentPlayer}'s turn`}
+        </h3>
+
         {/* Action Buttons */}
         <div className='action-buttons-container'>
-          <button className='income-button' onClick={() => submitAction('INCOME')}>Income</button>
-          <button className='coup-button' onClick={() => submitAction('COUP')}>Coup</button>
-          <button className='foreign-aid-button' onClick={() => submitAction('FOREIGN_AID')}>Foreign Aid</button>
-          <button className='steal-button' onClick={() => submitAction('STEAL')} >Steal</button>
-          <button className='assassinate-button' onClick={() => submitAction('ASSASSINATE')}>Assassinate</button>
-          <button className='tax-button' onClick={() => submitAction('TAX')}>Tax</button>
-          <button className='exchange-button' onClick={() => submitAction('EXCHANGE')}>Exchange</button>
+        <button 
+          className='income-button' 
+          onClick={() => submitAction('income')}
+          disabled={currentPlayer !== userName}
+        >
+          Income
+        </button>
+
+        <button 
+          className='coup-button' 
+          onClick={() => submitAction('coup')}
+          disabled={currentPlayer !== userName}
+        >
+          Coup
+        </button>
+
+        <button 
+          className='foreign-aid-button' 
+          onClick={() => submitAction('foreign aid')}
+          disabled={currentPlayer !== userName}
+        >
+          Foreign Aid
+        </button>
+
+        <button 
+          className='steal-button' 
+          onClick={() => submitAction('steal')} 
+          disabled={currentPlayer !== userName}
+        >
+          Steal
+        </button>
+
+        <button 
+          className='assassinate-button' 
+          onClick={() => submitAction('assassinate')} 
+          disabled={currentPlayer !== userName}
+        >
+          Assassinate
+        </button>
+
+        <button 
+          className='tax-button' 
+          onClick={() => submitAction('tax')} 
+          disabled={currentPlayer !== userName}
+        >
+          Tax
+        </button>
+
+        <button 
+          className='exchange-button' 
+          onClick={() => submitAction('exchange')} 
+          disabled={currentPlayer !== userName}
+        >
+          Exchange
+        </button>
         </div>
       </main>
   
       {/* Event Log */}
       <div className='event-log'>
         <h2>Event Log:</h2>
-        <p>Jane Doe's Turn</p>
+          {eventLog.length === 0 ? (
+            <p>No game events yet.</p>
+          ) : (
+              eventLog.map((log, idx) => (
+                <p key={idx}>{log}</p>
+              ))
+          )}
       </div>
     </div>
   );

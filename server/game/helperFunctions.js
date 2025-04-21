@@ -75,30 +75,16 @@ const generateSixDigitCode = () => {
 };
 
 // Update the game state at every action
-function updateGameState() { 
-    for (let i = 0; i < this.players.length; i++) {
-      const player = this.players[i];
-      this.gameSocket[i].emit('gameState', {
-        you: player,
-        allPlayers: this.players.map(p => ({
-          name: p.name,
-          coins: p.coins,
-          influenceCount: p.influences.filter(card => !card.revealed).length,
-          isDead: p.isDead
-        })),
-        currentPlayer: this.players[this.currentPlayer].name
-      });
-    }
+function updateGameState(gameInstance, io, lobbyCode) {
+    io.to(lobbyCode).emit('game-update', {
+      players: gameInstance.players,
+      currentPlayer: gameInstance.players[gameInstance.currentPlayer].name
+    });
   }
-
-  // Tell everyone what action was taken
-  function broadcast(message) {
-    for (let socket of this.gameSocket) {
-      socket.emit('gameMessage', message);
-    }
+  
+  function broadcast(io, lobbyCode, message) {
+    io.to(lobbyCode).emit('game-log', message);
   }
-
-
 
 module.exports = {
     generateSixDigitCode,

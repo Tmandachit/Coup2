@@ -261,8 +261,22 @@ io.on('connection', (socket) => {
   });
 
   // Handle action submit
-  socket.on('submit-action', ({ playerName, action, target }) => {
-    return;
+  socket.on('submit-action', ({ playerName, action, target }) => {    
+    const user = userSockets[socket.id];
+    if (!user) return;
+  
+    const { lobby } = user;
+    const game = games[lobby];
+    if (!game) return;
+  
+    const currentPlayer = game.players[game.currentPlayer];
+
+    if (currentPlayer.name !== playerName) {
+      socket.emit('error-message', 'It is not your turn.');
+      return;
+    }
+  
+    game.handleSubmit(action, target);
   });
 
   // Handle starting the game
@@ -287,7 +301,7 @@ io.on('connection', (socket) => {
       return socketEntry ? socketEntry[0] : null;
     }).filter(Boolean);
   
-    const game = new Game(players, sockets);
+    const game = new Game(players, sockets, io, lobbyCode);
     games[lobbyCode] = game;
   
     console.log(`Game instance created for lobby ${lobbyCode}`);
