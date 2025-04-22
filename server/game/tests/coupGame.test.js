@@ -1,9 +1,9 @@
 jest.mock('../helperFunctions', () => ({
-    buildNameSocketMap: jest.fn(() => ({ Alice: 'sock1', Bob: 'sock2' })),
-    buildNameIndexMap: jest.fn(() => ({ Alice: 0, Bob: 1 })),
+    buildNameSocketMap: jest.fn(() => ({ Jillian: 'sock1', Ty: 'sock2' })),
+    buildNameIndexMap: jest.fn(() => ({ Jillian: 0, Ty: 1 })),
     buildPlayers: jest.fn(() => [
-      { name: 'Alice', money: 2, influences: [], isDead: false },
-      { name: 'Bob', money: 2, influences: [], isDead: false }
+      { name: 'Jillian', money: 2, influences: [], isDead: false },
+      { name: 'Ty', money: 2, influences: [], isDead: false }
     ]),
     buildDeck: jest.fn(() => ['duke', 'assassin', 'captain', 'ambassador']),
     shuffle: jest.fn(deck => deck),
@@ -28,7 +28,7 @@ jest.mock('../helperFunctions', () => ({
     let game;
   
     beforeEach(() => {
-      game = new Game(['Alice', 'Bob'], {}, {}, 'XYZ');
+      game = new Game(['Jillian', 'Ty'], {}, {}, 'XYZ');
       // fake timers to please jest
       jest.useFakeTimers();
     });
@@ -56,7 +56,7 @@ jest.mock('../helperFunctions', () => ({
       expect(game.awaitingResponse).toEqual({
         type: 'action',
         action: 'tax',
-        actor: 'Alice',
+        actor: 'Jillian',
         requiredCard: 'duke'
       });
       expect(game.challengeWindowOpen).toBe(true);
@@ -69,7 +69,7 @@ jest.mock('../helperFunctions', () => ({
       expect(game.awaitingResponse).toEqual({
         type: 'action',
         action: 'tax',
-        actor: 'Alice',
+        actor: 'Jillian',
         requiredCard: 'duke'
       });
       expect(game.challengeWindowOpen).toBe(true);
@@ -78,14 +78,14 @@ jest.mock('../helperFunctions', () => ({
     });
 
     test('steal sets awaiting response and opens challenge window, and takes 2 coins', () => {
-      game.players[0].money = 1; // Alice
-      game.players[1].money = 3; // Bob
-      game.handleSubmit('steal', "Bob");
+      game.players[0].money = 1; // Jillian
+      game.players[1].money = 3; // Ty
+      game.handleSubmit('steal', "Ty");
       expect(game.awaitingResponse).toEqual({
         type: 'action',
         action: 'steal',
-        actor: 'Alice',
-        target: 'Bob',
+        actor: 'Jillian',
+        target: 'Ty',
         requiredCard: 'captain'
       });
       expect(game.challengeWindowOpen).toBe(true);
@@ -95,14 +95,14 @@ jest.mock('../helperFunctions', () => ({
     });
 
     test('steal only takes what the player has if its less than 2', () => {
-      game.players[0].money = 1; // Alice
-      game.players[1].money = 1; // Bob
-      game.handleSubmit('steal', "Bob");
+      game.players[0].money = 1; // Jillian
+      game.players[1].money = 1; // Ty
+      game.handleSubmit('steal', "Ty");
       expect(game.awaitingResponse).toEqual({
         type: 'action',
         action: 'steal',
-        actor: 'Alice',
-        target: 'Bob',
+        actor: 'Jillian',
+        target: 'Ty',
         requiredCard: 'captain'
       });
       expect(game.challengeWindowOpen).toBe(true);
@@ -112,14 +112,14 @@ jest.mock('../helperFunctions', () => ({
     });
 
     test('steal does nothing if target has no coins', () => {
-      game.players[0].money = 1; // Alice
-      game.players[1].money = 0; // Bob
-      game.handleSubmit('steal', "Bob");
+      game.players[0].money = 1; // Jillian
+      game.players[1].money = 0; // Ty
+      game.handleSubmit('steal', "Ty");
       expect(game.awaitingResponse).toEqual({
         type: 'action',
         action: 'steal',
-        actor: 'Alice',
-        target: 'Bob',
+        actor: 'Jillian',
+        target: 'Ty',
         requiredCard: 'captain'
       });
       expect(game.challengeWindowOpen).toBe(true);
@@ -130,30 +130,30 @@ jest.mock('../helperFunctions', () => ({
 
     test('assassinate sets awaiting response and opens challenge window, and takes 2 coins', () => {
       const start = game.players[0].money;
-      game.handleSubmit('assassinate', "Bob");
+      game.handleSubmit('assassinate', "Ty");
       expect(game.awaitingResponse).toEqual({
         type: 'action',
         action: 'assassinate',
-        actor: 'Alice',
-        target: 'Bob',
+        actor: 'Jillian',
+        target: 'Ty',
         requiredCard: 'assassin'
       });
       expect(game.challengeWindowOpen).toBe(true);
       game.resolveUnchallengedAction();
     });
 
-    test('assassinate makes all of alices money and one of bobs influences', () => {
-      game.players[0].money = 7; // Alice
-      game.players[1].influences = ['duke', 'assassin']; // Bob
-      game.handleSubmit('coup', "Bob");
+    test('assassinate makes all of jillians money and one of Tys influences', () => {
+      game.players[0].money = 7; // Jillian
+      game.players[1].influences = ['duke', 'assassin']; // Ty
+      game.handleSubmit('coup', "Ty");
       expect(game.players[0].money).toBe(0);
       expect(game.players[1].influences.length).toBe(1);
     });
 
     test('assassinate doesnt work with fewer than 7 coins', () => {
-      game.players[0].money = 6; // Alice
-      game.players[1].influences = ['duke', 'assassin']; // Bob
-      game.handleSubmit('coup', "Bob");
+      game.players[0].money = 6; // Jillian
+      game.players[1].influences = ['duke', 'assassin']; // Ty
+      game.handleSubmit('coup', "Ty");
       expect(game.players[0].money).toBe(6);
       expect(game.players[1].influences.length).toBe(2);
     });
@@ -178,7 +178,7 @@ jest.mock('../helperFunctions', () => ({
       game.nameIndexMap['Charlie'] = 2;
     
       game.endTurn();
-      expect(game.currentPlayer).toBe(2); // skips Bob (dead), goes to Charlie
+      expect(game.currentPlayer).toBe(2); // skips Ty (dead), goes to Charlie
     });
 
   });
@@ -187,7 +187,7 @@ jest.mock('../helperFunctions', () => ({
     let game;
   
     beforeEach(() => {
-      game = new Game(['Alice', 'Bob'], {}, {}, 'XYZ');
+      game = new Game(['Jillian', 'Ty'], {}, {}, 'XYZ');
   
       // give influences for testing
       game.players[0].influences = ['duke', 'captain'];
@@ -198,12 +198,12 @@ jest.mock('../helperFunctions', () => ({
     });
   
     test('returns full info for the current player', () => {
-      const socketID = 'sock1'; // Alice socket
+      const socketID = 'sock1'; // Jillian socket
       const view = game.getPlayerView(socketID);
   
-      const aliceView = view.find(p => p.name === 'Alice');
-      expect(aliceView).toEqual({
-        name: 'Alice',
+      const jillianView = view.find(p => p.name === 'Jillian');
+      expect(jillianView).toEqual({
+        name: 'Jillian',
         money: game.players[0].money,
         influences: ['duke', 'captain'],
         isDead: false
@@ -211,12 +211,12 @@ jest.mock('../helperFunctions', () => ({
     });
   
     test('returns limited info for other players', () => {
-      const socketID = 'sock1'; // Alice socket
+      const socketID = 'sock1'; // Jillian socket
       const view = game.getPlayerView(socketID);
   
-      const bobView = view.find(p => p.name === 'Bob');
-      expect(bobView).toEqual({
-        name: 'Bob',
+      const TyView = view.find(p => p.name === 'Ty');
+      expect(TyView).toEqual({
+        name: 'Ty',
         money: game.players[1].money,
         influenceCount: 1,
         isDead: true
@@ -227,8 +227,8 @@ jest.mock('../helperFunctions', () => ({
       game.players[1].influences = ['assassin', null];
       const view = game.getPlayerView('sock1');
   
-      const bobView = view.find(p => p.name === 'Bob');
-      expect(bobView.influenceCount).toBe(1);
+      const TyView = view.find(p => p.name === 'Ty');
+      expect(TyView.influenceCount).toBe(1);
     });
   });
   
