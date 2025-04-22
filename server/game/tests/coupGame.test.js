@@ -50,6 +50,14 @@ jest.mock('../helperFunctions', () => ({
       expect(game.players[0].money).toBe(start + 2);
     });
 
+    test('foreign aid adds 2 coins to current player if its the second players turn', () => {
+      const start = game.players[0].money;
+      const start2 = game.players[1].money;
+      game.endTurn();
+      game.handleSubmit('foreign_aid');
+      expect(game.players[1].money).toBe(start2 + 2);
+    });
+
     test('tax sets awaiting response and opens challenge window', () => {
       const start = game.players[0].money;
       game.handleSubmit('tax');
