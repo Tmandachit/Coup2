@@ -1,4 +1,4 @@
-h1 {
+/* h1 {
   font-size: 4.5rem;
   font-family: "Orbitron";
   margin-bottom: 10px;
@@ -46,9 +46,144 @@ button:hover {
   background-color: #0b2061;
 }
 
-/* Responsive Design */
 @media (max-width: 400px) {
   form {
       width: 90%;
   }
+} */
+
+/* Common styling across pages */
+:root {
+  --primary-color: #7dcff7;
+  --primary-dark: #3e71a8;
+  --primary-light: #a6e1ff;
+  --bg-dark: #0d1a2d;
+  --bg-medium: #1a2a40;
+  --text-light: #e0e6ff;
+  --button-gradient: linear-gradient(180deg, #384c6b 0%, #2a3b54 100%);
+  --button-hover-gradient: linear-gradient(180deg, #4c6591 0%, #354c6b 100%);
+  --accent-purple: #9b42d3;
+  --accent-red: #cc5d6b;
+  --accent-green: #30e879;
+}
+
+/* Shared background for all pages */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
+  background-image: url('/path/to/cityscape.jpg'); /* Use the same cityscape image */
+  background-position: center center;
+  background-size: cover;
+  background-attachment: fixed;
+  color: var(--text-light);
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(13, 26, 45, 0.9) 0%, rgba(26, 42, 64, 0.85) 50%, rgba(13, 26, 45, 0.9) 100%);
+  z-index: -1;
+}
+
+input.login-input, input.register-input {
+  width: 90%;
+  padding: 12px 15px;
+  margin: 12px 0;
+  background: rgba(20, 30, 50, 0.7);
+  border: 1px solid var(--primary-dark);
+  border-radius: 6px;
+  color: var(--text-light);
+  font-size: 16px;
+  box-shadow: 0 0 10px rgba(62, 113, 168, 0.3), inset 0 0 5px rgba(13, 20, 35, 0.5);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(3px);
+}
+
+input.login-input:focus, input.register-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 15px rgba(125, 207, 247, 0.5);
+}
+
+button {
+  padding: 12px 24px;
+  background: var(--button-gradient);
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(125, 207, 247, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  width: 90%;
+  margin: 12px 0;
+}
+
+button:hover {
+  background: var(--button-hover-gradient);
+  box-shadow: 0 0 15px rgba(125, 207, 247, 0.6);
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+/* Form and container styling for all pages */
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  padding: 30px;
+  background: rgba(13, 26, 45, 0.7);
+  border-radius: 10px;
+  border: 1px solid var(--primary-dark);
+  box-shadow: 0 0 30px rgba(62, 113, 168, 0.4), inset 0 0 15px rgba(13, 20, 35, 0.5);
+  backdrop-filter: blur(10px);
+}
+
+/* LOGIN PAGE SPECIFIC */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  text-align: center;
+}
+
+.login-container h1 {
+  font-size: 5rem;
+  font-family: 'Orbitron', 'Arial', sans-serif;
+  margin-bottom: 30px;
+  color: var(--primary-color);
+  text-shadow: 0 0 15px rgba(125, 207, 247, 0.6), 0 0 30px rgba(125, 207, 247, 0.4);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.login-button {
+  background: linear-gradient(180deg, #2a3b54 0%, #1d2a3c 100%);
+}
+
+.create-account-button {
+  background: linear-gradient(180deg, #4e2169 0%, #3a184d 100%);
+  border-color: var(--accent-purple);
+  color: #d8b8ff;
+}
+
+.create-account-button:hover {
+  background: linear-gradient(180deg, #5d2980 0%, #482159 100%);
+  box-shadow: 0 0 15px rgba(155, 66, 211, 0.6);
 }
