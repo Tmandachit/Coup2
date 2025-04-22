@@ -2,25 +2,45 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #0d1a2d 0%, #1a2a40 50%, #0d1a2d 100%);
+  background-image: url('../Assets/coup_background.png'); /* Replace with your actual image path */
+  background-position: center center;
+  background-size: cover;
   background-attachment: fixed;
   position: relative;
   color: #e0e6ff;
   font-family: 'Segoe UI', 'Roboto', sans-serif;
+  padding-bottom: 8vh;
 }
 
+/* Add an overlay to ensure text remains readable against the background */
+.game-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(13, 26, 45, 0.85) 0%, rgba(26, 42, 64, 0.8) 50%, rgba(13, 26, 45, 0.85) 100%);
+  z-index: 0;
+}
+
+/* Ensure all content appears above the background overlay */
 .game-layout {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  padding: 8vh 2vw 2vh;
+  justify-content: flex-start;
+  padding: 8vh 2vw 6vh;
   flex: 1;
-  gap: 3vh; /* Reduced gap to allow components to fit without scrolling */
+  gap: 2vh;
   max-height: 100vh;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative; /* Added to ensure stacking context */
+  z-index: 1; /* Ensure content appears above the background overlay */
 }
 
+/* Update other containers to ensure they appear above the background */
 .top-left-buttons {
   position: absolute;
   top: 1vh;
@@ -56,7 +76,7 @@
   right: 1vw;
   width: 20vw;
   max-width: 250px;
-  height: 40vh;
+  height: 35vh;
   background: rgba(13, 20, 35, 0.8);
   color: #e0e6ff;
   padding: 1vh 1vw;
@@ -65,6 +85,7 @@
   box-shadow: 0 0 20px rgba(62, 113, 168, 0.4), inset 0 0 10px rgba(101, 178, 255, 0.1);
   overflow-y: auto;
   backdrop-filter: blur(5px);
+  z-index: 10;
 }
 
 .event-log h2 {
@@ -127,7 +148,7 @@
 .action-buttons-container {
   display: flex;
   justify-content: center;
-  padding: 1vh 1.5vw; /* Reduced vertical padding */
+  padding: 1vh 1.5vw;
   background: rgba(20, 30, 50, 0.7);
   border-radius: 10px;
   gap: 0.8vw;
@@ -136,6 +157,11 @@
   border: 1px solid #3e71a8;
   box-shadow: 0 0 20px rgba(62, 113, 168, 0.4), inset 0 0 10px rgba(101, 178, 255, 0.1);
   backdrop-filter: blur(5px);
+  margin-top: 2vh;
+  margin-bottom: 4vh;
+  position: relative;
+  z-index: 5;
+  overflow: visible;
 }
 
 .action-buttons-container button {
