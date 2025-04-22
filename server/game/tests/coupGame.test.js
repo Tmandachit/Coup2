@@ -29,6 +29,8 @@ jest.mock('../helperFunctions', () => ({
   
     beforeEach(() => {
       game = new Game(['Alice', 'Bob'], {}, {}, 'XYZ');
+      // fake timers to please jest
+      jest.useFakeTimers();
     });
   
     test('initializes with 2 influences per player', () => {
@@ -187,7 +189,7 @@ jest.mock('../helperFunctions', () => ({
     beforeEach(() => {
       game = new Game(['Alice', 'Bob'], {}, {}, 'XYZ');
   
-      // Give influences for testing
+      // give influences for testing
       game.players[0].influences = ['duke', 'captain'];
       game.players[0].isDead = false;
   
@@ -196,7 +198,7 @@ jest.mock('../helperFunctions', () => ({
     });
   
     test('returns full info for the current player', () => {
-      const socketID = 'sock1'; // Alice’s socket
+      const socketID = 'sock1'; // Alice socket
       const view = game.getPlayerView(socketID);
   
       const aliceView = view.find(p => p.name === 'Alice');
@@ -209,7 +211,7 @@ jest.mock('../helperFunctions', () => ({
     });
   
     test('returns limited info for other players', () => {
-      const socketID = 'sock1'; // Alice’s socket
+      const socketID = 'sock1'; // Alice socket
       const view = game.getPlayerView(socketID);
   
       const bobView = view.find(p => p.name === 'Bob');
@@ -230,3 +232,7 @@ jest.mock('../helperFunctions', () => ({
     });
   });
   
+  // put the fake timers back
+  afterEach(() => {
+    jest.clearAllTimers();
+  });

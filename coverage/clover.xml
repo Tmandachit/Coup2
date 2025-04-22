@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1745289660940" clover="3.2.0">
-  <project timestamp="1745289660940" name="All files">
-    <metrics statements="93" coveredstatements="82" conditionals="39" coveredconditionals="29" methods="11" coveredmethods="10" elements="143" coveredelements="121" complexity="0" loc="93" ncloc="93" packages="1" files="1" classes="1"/>
+<coverage generated="1745345144034" clover="3.2.0">
+  <project timestamp="1745345144034" name="All files">
+    <metrics statements="94" coveredstatements="83" conditionals="41" coveredconditionals="30" methods="11" coveredmethods="10" elements="146" coveredelements="123" complexity="0" loc="94" ncloc="94" packages="1" files="1" classes="1"/>
     <file name="coupGame.js" path="C:\Users\allie\OneDrive\Documents\GitHub\Coup2\server\game\coupGame.js">
-      <metrics statements="93" coveredstatements="82" conditionals="39" coveredconditionals="29" methods="11" coveredmethods="10"/>
+      <metrics statements="94" coveredstatements="83" conditionals="41" coveredconditionals="30" methods="11" coveredmethods="10"/>
       <line num="1" count="1" type="stmt"/>
       <line num="2" count="1" type="stmt"/>
       <line num="6" count="17" type="stmt"/>
@@ -68,35 +68,36 @@
       <line num="123" count="3" type="stmt"/>
       <line num="125" count="3" type="stmt"/>
       <line num="126" count="3" type="stmt"/>
-      <line num="130" count="5" type="stmt"/>
+      <line num="130" count="5" type="cond" truecount="1" falsecount="1"/>
       <line num="131" count="5" type="stmt"/>
-      <line num="132" count="5" type="cond" truecount="2" falsecount="0"/>
-      <line num="134" count="5" type="stmt"/>
+      <line num="132" count="5" type="stmt"/>
+      <line num="133" count="5" type="cond" truecount="2" falsecount="0"/>
       <line num="135" count="5" type="stmt"/>
-      <line num="137" count="5" type="cond" truecount="2" falsecount="1"/>
-      <line num="139" count="3" type="stmt"/>
+      <line num="136" count="5" type="stmt"/>
+      <line num="138" count="5" type="cond" truecount="2" falsecount="1"/>
       <line num="140" count="3" type="stmt"/>
       <line num="141" count="3" type="stmt"/>
       <line num="142" count="3" type="stmt"/>
       <line num="143" count="3" type="stmt"/>
-      <line num="146" count="0" type="stmt"/>
+      <line num="144" count="3" type="stmt"/>
       <line num="147" count="0" type="stmt"/>
-      <line num="148" count="0" type="cond" truecount="0" falsecount="2"/>
-      <line num="149" count="0" type="stmt"/>
+      <line num="148" count="0" type="stmt"/>
+      <line num="149" count="0" type="cond" truecount="0" falsecount="2"/>
       <line num="150" count="0" type="stmt"/>
-      <line num="153" count="2" type="stmt"/>
+      <line num="151" count="0" type="stmt"/>
       <line num="154" count="2" type="stmt"/>
       <line num="155" count="2" type="stmt"/>
-      <line num="158" count="5" type="stmt"/>
+      <line num="156" count="2" type="stmt"/>
       <line num="159" count="5" type="stmt"/>
-      <line num="163" count="3" type="stmt"/>
-      <line num="164" count="6" type="stmt"/>
-      <line num="166" count="6" type="cond" truecount="2" falsecount="0"/>
-      <line num="167" count="3" type="stmt"/>
-      <line num="174" count="3" type="stmt"/>
-      <line num="177" count="6" type="stmt"/>
-      <line num="183" count="3" type="stmt"/>
-      <line num="187" count="1" type="stmt"/>
+      <line num="160" count="5" type="stmt"/>
+      <line num="164" count="3" type="stmt"/>
+      <line num="165" count="6" type="stmt"/>
+      <line num="167" count="6" type="cond" truecount="2" falsecount="0"/>
+      <line num="168" count="3" type="stmt"/>
+      <line num="175" count="3" type="stmt"/>
+      <line num="178" count="6" type="stmt"/>
+      <line num="184" count="3" type="stmt"/>
+      <line num="188" count="1" type="stmt"/>
     </file>
   </project>
 </coverage>

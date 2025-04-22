@@ -1,5 +1,5 @@
+import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
 import useSocket from '../../Socket/useSocket';
 import './HomePage.css';
 
@@ -9,6 +9,7 @@ const HomePage = () => {
 
   const firstName = sessionStorage.getItem("firstName");
   const userName = sessionStorage.getItem("userId");
+  const [error, setError] = useState(null);
 
   const handleCreateGame = async () => {
     try {
