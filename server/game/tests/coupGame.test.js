@@ -137,7 +137,7 @@ jest.mock('../helperFunctions', () => ({
     });
 
     test('assassinate sets awaiting response and opens challenge window, and takes 2 coins', () => {
-      const start = game.players[0].money;
+      game.players[0].money = 4;
       game.handleSubmit('assassinate', "Ty");
       expect(game.awaitingResponse).toEqual({
         type: 'action',
