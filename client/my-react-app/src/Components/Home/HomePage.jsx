@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import useSocket from '../../Socket/useSocket';
+import axios from "axios";
 import './HomePage.css';
 
 const HomePage = () => {
@@ -10,6 +11,23 @@ const HomePage = () => {
   const firstName = sessionStorage.getItem("firstName");
   const userName = sessionStorage.getItem("userId");
   const [error, setError] = useState(null);
+
+  const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
+  const [leaderboard, setLeaderboard] = useState([]);
+
+  const fetchLeaderboard = async () => {
+    try {
+      const response = await axios.post("http://localhost:5001/leaderboard");
+
+      if (response.status === 200) {
+        setLeaderboard(response.data);
+      } else {
+        console.error("Unexpected response:", response);
+      }
+    } catch (err) {
+      console.error("Failed to load leaderboard:", err);
+    }
+  };
 
   const handleCreateGame = async () => {
     try {
@@ -27,7 +45,7 @@ const HomePage = () => {
           if (res.status === 'ok') {
             navigate(`/lobby?lobby=${lobbyCode}`, { state: { username: userName } });
           } else {
-            setError(res.message || 'Failed to join lobby.');
+            console.error(res.message || 'Failed to join lobby.');
           }
         });
       } else {
@@ -36,7 +54,6 @@ const HomePage = () => {
       }
     } catch (err) {
       console.error("Error creating lobby:", err);
-      setError("Error creating lobby.");
     }
   };
 
@@ -59,12 +76,46 @@ const HomePage = () => {
         </Link>
       </div>
 
-     {/* Join Game Button */}
-     <div className="input-group-btn">
+      {/* Profile Button */}
+      <div className="input-group-btn">
         <Link className="home" to="/profile">
           Profile
         </Link>
       </div>
+
+      {/* Leaderboard Button */}
+      <div className="input-group-btn">
+        <button className="home" onClick={() => {
+          setIsLeaderboardOpen(true);
+          fetchLeaderboard();
+        }}>
+          Leaderboard
+        </button>
+      </div>
+
+      {/* Leaderboard Modal */}
+      {isLeaderboardOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h2>Leaderboard</h2>
+            <ul>
+              {leaderboard.length === 0 ? (
+                <li>Loading...</li>
+              ) : (
+                leaderboard.map((player, index) => {
+                  const winText = player.gamesWon === 1 ? "Win" : "Wins";
+                  return (
+                    <li key={index}>
+                      0{index + 1} {player.firstName} {player.lastName} - {player.gamesWon} {winText}
+                    </li>
+                  );
+                })
+              )}
+            </ul>
+            <button onClick={() => setIsLeaderboardOpen(false)}>X</button>
+          </div>
+        </div>
+      )}
 
     </div>
   );
