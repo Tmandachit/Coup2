@@ -2,45 +2,78 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-radius: 10px;
-    padding: 1vh;
-    transition: transform 0.2s;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    background-color: #25f337;
+    border-radius: 12px;
+    padding: 0.2vh 0.2vw; /* Further reduced padding */
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.station::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.station::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(125, 207, 247, 0.8), transparent);
 }
 
 .station:hover {
-    transform: translateY(-5px);
+    transform: translateY(-2px); /* Even smaller movement */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5), 0 0 25px rgba(125, 207, 247, 0.4);
 }
 
 /* Opponent stations - smaller, in a row at the top */
 .opponent-station {
-    width: 15vw;
-    min-width: 140px;
-    max-width: 180px;
-    max-height: 300px;
-    background-color: #213f7a;
-    color: white;
+    width: 14vw; /* Slightly smaller */
+    min-width: 130px;
+    max-width: 160px;
+    height: auto;
+    background: linear-gradient(to bottom, #1e3c6e 0%, #162c52 100%);
+    color: #e0e6ff;
     margin: 0 1vw;
+    border: 1px solid #3e71a8;
 }
 
 /* Player station - larger, above action buttons */
 .player-station {
     width: 20vw;
-    min-width: 300px;
-    max-width: 700px;
-    background-color: #80c190;
-    color: white;
-    /* margin-bottom: 1vh; */
-    /* padding: 2vh 3vw; */
-    /* Add margin to create more separation from opponents */
-    /* margin-top: 6vh; */
+    min-width: 280px; /* Reduced from 300px */
+    max-width: 650px; /* Reduced from 700px */
+    height: auto;
+    background: linear-gradient(to bottom, #2a5792 0%, #1e3c6e 100%);
+    color: #e0e6ff;
+    border: 1px solid #5b8aba;
 }
 
 .player-name {
-    font-size: 2rem;
-    margin: 0 0 1vh 0;
+    font-size: 1.3rem; /* Reduced from 1.5rem */
+    margin: 0 0 0.5vh 0; /* Reduced margin */
     font-weight: bold;
+    text-shadow: 0 0 10px rgba(125, 207, 247, 0.7);
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 2;
+    text-transform: uppercase;
+}
+
+.opponent-station .player-name {
+    font-size: 1rem; /* Smaller */
+    margin-bottom: 0.3vh; /* Reduced margin */
 }
 
 /* Display cards in a row */
@@ -49,40 +82,93 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    /* gap: 1vw; */
-    margin-bottom: 0.5vh;
+    margin-bottom: 0.3vh; /* Reduced from 0.5vh */
     width: 100%;
+    position: relative;
+    z-index: 2;
 }
 
 /* Adjust card sizes based on station type */
 .opponent-station .card-container {
+    transform: scale(0.55); /* Smaller scale */
+    margin: -3.5vh -1.5vw; /* Increased negative margin to compact */
+    transition: all 0.3s ease;
+}
+
+.opponent-station .card-container:hover {
     transform: scale(0.6);
-    margin: -3vh -1vw;
+    z-index: 10;
 }
 
 /* Make sure wallet takes less space in player station */
 .opponent-station .wallet-container {
     flex: 1;
-    max-width: 100px;
-    /* margin-top: 0.25vh; */
+    max-width: 90px; /* Reduced from 100px */
+    position: relative;
+    z-index: 2;
 }
 
 .player-station .card-container {
-    transform: scale(1.1); /* Make cards bigger for the client player */
-    margin: 5% 1vw 2.5% 1vw;
-    flex: 3; /* Make cards take up more space */
+    transform: scale(0.9);  /* Further reduced from 1.0 */
+    margin: 2% 1vw 1.5% 1vw; /* Reduced margins */
+    flex: 3;
+    transition: all 0.3s ease;
+}
+
+.player-station .card-container:hover {
+    transform: scale(0.95);
+    z-index: 10;
 }
 
 /* Make sure wallet takes less space in player station */
 .player-station .wallet-container {
     flex: 1;
-    /* margin-top: 0.25vh; */
+    position: relative;
+    z-index: 2;
+    background: rgba(13, 26, 45, 0.6);
+    padding: 0.6vh;
+    border-radius: 8px;
+    border: 1px solid #3e71a8;
+    box-shadow: 0 0 15px rgba(62, 113, 168, 0.3);
 }
 
-.station.targetable {
-    cursor: pointer;
-    border: 3px solid #fbc02d;
-    box-shadow: 0 0 10px #fbc02d;
-    transition: 0.2s ease;
-  }
-  
+/* Add holographic effect for active player */
+.player-station::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        to right,
+        rgba(125, 207, 247, 0) 0%,
+        rgba(125, 207, 247, 0.05) 50%,
+        rgba(125, 207, 247, 0) 100%
+    );
+    animation: holographic 6s linear infinite;
+    transform: rotate(30deg);
+    pointer-events: none;
+}
+
+@keyframes holographic {
+    0% {
+        transform: rotate(30deg) translateX(-100%);
+    }
+    100% {
+        transform: rotate(30deg) translateX(100%);
+    }
+}
+
+/* Add small circuit-like details to stations */
+.station::before {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 30%;
+    height: 5px;
+    background: linear-gradient(90deg, transparent, #3e71a8);
+    border-radius: 5px;
+    opacity: 0.4;
+}

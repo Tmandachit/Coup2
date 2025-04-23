@@ -1,43 +1,82 @@
-/* Container styling */
-.lobbyContainer {
+/* Lobby.css - Updated to match game theme */
+
+:root {
+    --primary-color: #7dcff7;
+    --primary-dark: #3e71a8;
+    --primary-light: #a6e1ff;
+    --bg-dark: #0d1a2d;
+    --bg-medium: #1a2a40;
+    --text-light: #e0e6ff;
+    --button-gradient: linear-gradient(180deg, #384c6b 0%, #2a3b54 100%);
+    --button-hover-gradient: linear-gradient(180deg, #4c6591 0%, #354c6b 100%);
+    --accent-purple: #9b42d3;
+    --accent-red: #cc5d6b;
+    --accent-green: #30e879;
+  }
+  
+  /* Container styling */
+  .lobbyContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    min-height: 100vh;
     width: 100vw;
-    color: #ffffff;
-    font-family: 'Arial', sans-serif;
+    color: var(--text-light);
+    font-family: 'Segoe UI', 'Roboto', sans-serif;
     text-align: center;
-    overflow: hidden; /* Prevents unwanted scroll */
-}
-
-/* Lobby content styling to keep everything centered */
-.lobbyContent {
+    overflow: hidden;
+    background-image: url('../Assets/coup_background.png');
+    background-position: center center;
+    background-size: cover;
+    background-attachment: fixed;
+    position: relative;
+  }
+  
+  .lobbyContainer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(13, 26, 45, 0.85) 0%, rgba(26, 42, 64, 0.8) 50%, rgba(13, 26, 45, 0.85) 100%);
+    z-index: 0;
+  }
+  
+  /* Lobby content styling to keep everything centered */
+  .lobbyContent {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 0 30px rgba(62, 113, 168, 0.4), inset 0 0 15px rgba(13, 20, 35, 0.5);
+    background: rgba(13, 26, 45, 0.7);
     min-width: 400px;
-    white-space: nowrap; /* Prevents text wrapping */
-}
-
-/* Lobby code styling */
-.lobbyCode {
-    font-size: 5.5rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--primary-dark);
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Lobby code styling */
+  .lobbyCode {
+    font-size: 2.5rem;
     font-weight: bold;
-    white-space: nowrap; /* Ensures no wrapping */
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     cursor: pointer;
-    user-select: none; 
-}
-
-/* Input and Button styling */
-.input-group {
+    user-select: none;
+    color: var(--primary-color);
+    text-shadow: 0 0 15px rgba(125, 207, 247, 0.6), 0 0 30px rgba(125, 207, 247, 0.4);
+    margin-bottom: 20px;
+  }
+  
+  /* Input and Button styling */
+  .input-group {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -45,86 +84,171 @@
     margin-bottom: 20px;
     width: 100%;
     max-width: 400px;
-}
-
-.input-group input {
+  }
+  
+  .input-group input {
     width: 100%;
     padding: 12px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--primary-dark);
     border-radius: 8px;
     font-size: 1rem;
-    background-color: #2c2c3a;
+    background: rgba(20, 30, 50, 0.7);
     color: white;
     text-align: center;
-}
-
-.input-group input::placeholder {
+    box-shadow: 0 0 10px rgba(62, 113, 168, 0.3), inset 0 0 5px rgba(13, 20, 35, 0.5);
+  }
+  
+  .input-group input::placeholder {
     color: rgba(255, 255, 255, 0.7);
-}
-
-.lobbyButton {
+  }
+  
+  .lobbyButton,
+  .readyUpButton,
+  .startGameButton,
+  .leaveLobbyButton {
     width: 100%;
     padding: 12px;
-    background-color: #3498db;
-    color: white;
+    background: var(--button-gradient);
+    color: var(--primary-color);
     font-size: 1rem;
     text-decoration: none;
-    border: none;
+    border: 1px solid var(--primary-color);
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.lobbyButton:hover {
-    background-color: #2980b9;
+    margin-top: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 0 10px rgba(125, 207, 247, 0.3);
+    transition: all 0.3s ease;
+  }
+  
+  .lobbyButton:hover,
+  .readyUpButton:hover,
+  .startGameButton:hover,
+  .leaveLobbyButton:hover {
+    background: var(--button-hover-gradient);
+    box-shadow: 0 0 15px rgba(125, 207, 247, 0.6);
     transform: scale(1.05);
-}
-
-.lobbyButton:active {
+  }
+  
+  .lobbyButton:active,
+  .readyUpButton:active,
+  .startGameButton:active,
+  .leaveLobbyButton:active {
     transform: scale(0.95);
-}
-
-.lobbyPlayerTitle {
-    font-size: 4.5rem;
-    font-family: "Orbitron";
+  }
+  
+  .readyUpButton {
+    background: linear-gradient(180deg, #1a7c41 0%, #135e31 100%);
+    border-color: var(--accent-green);
+    color: #b8ffe0;
+  }
+  
+  .readyUpButton:hover {
+    background: linear-gradient(180deg, #239251 0%, #1a753c 100%);
+    box-shadow: 0 0 15px rgba(48, 232, 121, 0.6);
+  }
+  
+  .startGameButton {
+    background: linear-gradient(180deg, #4e2169 0%, #3a184d 100%);
+    border-color: var(--accent-purple);
+    color: #d8b8ff;
+  }
+  
+  .startGameButton:hover {
+    background: linear-gradient(180deg, #5d2980 0%, #482159 100%);
+    box-shadow: 0 0 15px rgba(155, 66, 211, 0.6);
+  }
+  
+  .leaveLobbyButton {
+    background: linear-gradient(180deg, #6d3d46 0%, #542e36 100%);
+    border-color: var(--accent-red);
+    color: #ffcccc;
+  }
+  
+  .leaveLobbyButton:hover {
+    background: linear-gradient(180deg, #7d4652 0%, #643741 100%);
+    box-shadow: 0 0 15px rgba(204, 93, 107, 0.6);
+  }
+  
+  .lobbyPlayerTitle {
+    font-size: 2rem;
+    font-family: "Orbitron", "Segoe UI", sans-serif;
     margin-bottom: 10px;
-    color: #1e88e5;
-}
-
-/* Ensure players are displayed without bullet points */
-.lobbyList {
-    list-style: none; /* Removes default bullet points */
+    color: var(--primary-color);
+  }
+  
+  /* Ensure players are displayed without bullet points */
+  .lobbyList {
+    list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px; /* Adds spacing between players */
-}
-
-.lobbyList li {
-    padding: 10px;
+    gap: 8px;
+    width: 100%;
+  }
+  
+  .lobbyList li {
+    padding: 12px;
     margin: 5px 0;
-    border-radius: 5px;
+    border-radius: 8px;
     text-align: center;
-    font-size: 2rem;
+    font-size: 1.2rem;
     font-weight: bold;
     color: white;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-.playerReady {
-    background-color: #2ecc71 !important;
+    width: 80%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease;
   }
   
-.playerNotReady {
-background-color: #e74c3c !important;
-}
-.startGameButton:disabled {
-    background-color: #7f8c8d; /* grey */
+  .lobbyList li:hover {
+    transform: translateY(-2px);
+  }
+  
+  .playerReady {
+    background: linear-gradient(180deg, #1a7c41 0%, #135e31 100%);
+    border: 1px solid var(--accent-green);
+  }
+    
+  .playerNotReady {
+    background: linear-gradient(180deg, #6d3d46 0%, #542e36 100%);
+    border: 1px solid var(--accent-red);
+  }
+  
+  .startGameButton:disabled {
+    background: linear-gradient(180deg, #444, #333);
+    border-color: #777;
+    color: #aaa;
     cursor: not-allowed;
     opacity: 0.6;
+    box-shadow: none;
   }
-
   
+  h2 {
+    color: var(--primary-light);
+    margin-top: 15px;
+    margin-bottom: 15px;
+    text-shadow: 0 0 10px rgba(166, 225, 255, 0.4);
+  }
+  
+  @media (max-width: 480px) {
+    .lobbyContent {
+      min-width: 300px;
+      width: 90%;
+      padding: 20px 15px;
+    }
+  
+    .lobbyCode {
+      font-size: 1.8rem;
+    }
+  
+    .lobbyList li {
+      font-size: 1rem;
+    }
+  }
