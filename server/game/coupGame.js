@@ -127,6 +127,7 @@ class Game {
   }
 
   resolveUnchallengedAction() {
+    if (!this.awaitingResponse) return;
     const { action, actor, target } = this.awaitingResponse;
     const actorPlayer = this.players[this.nameIndexMap[actor]];
     const targetPlayer = target ? this.players[this.nameIndexMap[target]] : null;
