@@ -1,9 +1,10 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import useSocket from '../../Socket/useSocket';
 import axios from "axios";
 import { toast } from 'react-toastify';
+import { FaMusic, FaMusicSlash } from 'react-icons/fa';
 import "./Lobby.css";
 
 const Lobby = () => {
@@ -53,6 +54,18 @@ const Lobby = () => {
     };
   }, [socket, navigate, lobbyCode]);
 
+   // Music controller
+   useEffect(() => {
+    if (audioRef.current) {
+      if (musicOn) {
+        audioRef.current.play().catch((e) => console.log('Autoplay prevented', e));
+      } else {
+        audioRef.current.pause();
+      }
+    }
+  }, [musicOn]);
+
+
   // Function to start the game
   const handleStartGame = () => {
     socket.emit('start-game', { lobbyCode });
@@ -66,7 +79,17 @@ const Lobby = () => {
 
   return (
     <div className="lobbyContainer">
+     <audio ref={audioRef} loop src="/lobby-music.mp3" />
       <div className="lobbyContent">
+      {/* Music Toggle Button */}
+      <button
+          className="musicToggleButton"
+          onClick={() => setMusicOn(!musicOn)}
+          title={musicOn ? "Turn Music Off" : "Turn Music On"}
+        >
+          {musicOn ? <FaMusic size={24} /> : <FaMusicSlash size={24} />}
+        </button>
+
         <h1
           className="lobbyCode"
           title="Click to copy"
