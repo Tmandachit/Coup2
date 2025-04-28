@@ -6,7 +6,8 @@ const { Server } = require('socket.io');
 const path = require('path');                           
 const { db } = require("./firebase"); 
 const bcrypt = require("bcrypt");
-const { doc, getDoc, setDoc, collection, query, where, getDocs } = require("firebase/firestore");
+const { doc, getDoc, setDoc, collection, query, where, getDocs, orderBy, limit } = require("firebase/firestore");
+
 const Game = require('./game/coupGame.js');
 
 // Initialize Express app and HTTP server
@@ -130,6 +131,34 @@ app.post("/login", async (req, res) => {
       res.status(500).json({ message: "Internal server error" });
   }
 });
+
+// Leaderboard Display
+app.post("/leaderboard", async (req, res) => {
+  try {
+    const q = query(
+      collection(db, "players"),
+      orderBy("gamesWon", "desc"),
+      limit(5)
+    );
+    const snapshot = await getDocs(q);
+
+    const players = [];
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      players.push({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        gamesWon: data.gamesWon,
+      });
+    });
+
+    res.status(200).json(players);
+  } catch (err) {
+    console.error("Error fetching leaderboard:", err);
+    res.status(500).json({ message: "Failed to load leaderboard" });
+  }
+});
+
 
 // Change password
 app.post("/changepassword", async (req, res) => {

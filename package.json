@@ -1,5 +1,29 @@
 {
   "dependencies": {
     "react-toastify": "^11.0.5"
-  }
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.26.9",
+    "@babel/preset-react": "^7.26.3",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0"
+  },
+  "name": "coup2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tmandachit/Coup2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tmandachit/Coup2/issues"
+  },
+  "homepage": "https://github.com/Tmandachit/Coup2#readme"
 }

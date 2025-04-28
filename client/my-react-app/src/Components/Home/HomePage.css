@@ -11,6 +11,7 @@
   --accent-purple: #9b42d3;
   --accent-red: #cc5d6b;
   --accent-green: #30e879;
+  --accent-yellow: #d2c730;
 }
 
 /* Shared background for all pages */
@@ -190,6 +191,19 @@ form {
 .input-group-btn:nth-child(5) .home:hover {
   background: linear-gradient(180deg, #7d4652 0%, #643741 100%);
   box-shadow: 0 0 15px rgba(204, 93, 107, 0.6);
+}
+
+
+/* Styling for the fourth button on the Home page */
+.input-group-btn:nth-child(6) .home {
+  background: linear-gradient(180deg, #c9c962 0%, #d0d454 100%);
+  border-color: var(--accent-yellow);
+  color: #e8e8cb;
+}
+
+.input-group-btn:nth-child(6) .home:hover {
+  background: linear-gradient(180deg, #cfcb73 0%, #dad71f 100%);
+  box-shadow: 0 0 15px rgba(226, 206, 51, 0.6);
 }
 
 /* Footer styling for the Home page */
