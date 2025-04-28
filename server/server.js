@@ -14,10 +14,15 @@ const Game = require('./game/coupGame.js');
 const app = express();
 const server = createServer(app);
 
+// define allowed origins - used for deployment - .env file in server should say 'production'
+const allowedOrigins = process.env.NODE_ENV === 'production' 
+  ? ['https://coup.chconnect.uk', 'https://www.chconnect.uk']
+  : ['http://localhost:5173'];
+
 // Initialize Socket.IO server with CORS configuration
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:5173'],                // Allowed client origin for socket connections
+    origin: allowedOrigins,                // Allowed client origin for socket connections
     methods: ['GET', 'POST'],                         // Allowed HTTP methods
     credentials: true,                                // Allow credentials (cookies, headers, etc.)
   },
@@ -25,7 +30,7 @@ const io = new Server(server, {
 
 // Middleware setup for CORS and JSON parsing
 app.use(cors({
-  origin: 'http://localhost:5173',                
+  origin: allowedOrigins,                
   methods: ['GET', 'POST'],                        
   credentials: true,                                
 }));
