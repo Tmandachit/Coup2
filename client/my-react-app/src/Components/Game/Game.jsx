@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import rulesImage from './CoupRule.png';
 import cheatSheetImage from './CoupCheatSheet.png';
 import useSocket from '../../Socket/useSocket';
 import PlayerStation from '../PlayerStation/PlayerStation';
+import confetti from 'canvas-confetti';
 import "./Game.css";
+
 
 const Game = () => {
   const [searchParams] = useSearchParams();
   const lobbyCode = searchParams.get('lobby');
   const socket = useSocket();
   const userName = sessionStorage.getItem("userId");
+  const navigate = useNavigate();
 
   const [players, setPlayers] = useState([]);
   const [eventLog, setEventLog] = useState([]);
@@ -18,9 +21,12 @@ const Game = () => {
   const [pendingAction, setPendingAction] = useState(null);
   const [isSelectingTarget, setIsSelectingTarget] = useState(false);
   const [awaitingResponse, setAwaitingResponse] = useState(null);
-
-
+  const [countdown, setCountdown] = useState(null);
   const [popupImage, setPopupImage] = useState(null);
+  const [winner, setWinner] = useState(null);
+  const [isWinner, setIsWinner] = useState(false);
+
+  
 
   const handleShowPopup = (type) => {
     if (type === 'rules') {
@@ -50,14 +56,61 @@ const Game = () => {
   
     socket.on('awaiting-response', (data) => {
       console.log("Received challenge/block prompt:", data);
+      setCountdown(10);
       setAwaitingResponse(data);
+    });
+
+    socket.on('clear-awaiting-response', () => {
+      setCountdown(null);
+      setAwaitingResponse(null);
+    });    
+
+    socket.on('game-over', ({ winner }) => {
+      setWinner(winner);
+      setIsWinner(userName === winner);
+        
+      if (userName == winner) {
+        const canvas = document.createElement('canvas');
+        canvas.style.position = 'fixed';
+        canvas.style.top = 0;
+        canvas.style.left = 0;
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.pointerEvents = 'none';
+        canvas.style.zIndex = 10000;
+        document.body.appendChild(canvas);
+
+        const myConfetti = confetti.create(canvas, { resize: true });
+
+        myConfetti({
+          particleCount: 200,
+          spread: 120,
+          origin: { y: 0.6 }
+        });
+
+        setTimeout(() => {
+          document.body.removeChild(canvas);
+        }, 5000);
+      } 
     });
   
     return () => {
       socket.off('game-log');
       socket.off('awaiting-response');
+      socket.off('clear-awaiting-response');
+      socket.off('game-over');
     };
   }, [socket]);
+  
+  useEffect(() => {
+    if (countdown === null || countdown <= 0) return;
+  
+    const timer = setTimeout(() => {
+      setCountdown(prev => prev - 1);
+    }, 1000);
+  
+    return () => clearTimeout(timer);
+  }, [countdown]);
   
 
   useEffect(() => {
@@ -80,9 +133,26 @@ const Game = () => {
 
   const myPlayer = players.find(p => p.name === userName);
   const opponents = players.filter(p => p.name !== userName);
+  const isMyTurn = currentPlayer === userName;
+  const mustCoup = myPlayer?.money >= 10;
 
   return (
     <div className="game-page">
+      {/* Win Display */}
+      {winner && (
+        <div className="winner-overlay">
+          <div className={`winner-popup ${isWinner ? 'victory' : 'defeat'}`}>
+            <div className="winner-title">
+              {isWinner ? "🏆 Champion!" : "💀 Defeated!"}
+            </div>
+            <p>{isWinner ? "You conquered the game!" : `${winner} wins the game.`}</p>
+            <button className="small-button" onClick={() => navigate('/home')}>
+              Leave
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Rules & Cheatsheet buttons */}
       <div className='top-left-buttons'>
         <button className='small-button' onClick={() => handleShowPopup('rules')}>Rules</button>
@@ -99,7 +169,7 @@ const Game = () => {
         </div>
       )}
 
-      <main className="game-layout">
+      <main className="game-layout">      
         {/* Opponent Cards */}
         <div className='opponents-container'>
           {opponents.map((player, index) => (
@@ -111,7 +181,7 @@ const Game = () => {
               onTargetClick={(targetName) => {
                 submitAction(pendingAction, targetName);
                 setPendingAction(null);
-                setIsSelectingTarget(false);
+                setTimeout(() => setIsSelectingTarget(false), 0);
               }}
             />
           ))}
@@ -141,8 +211,11 @@ const Game = () => {
         <div className='action-buttons-container'>
           <button
             className='income-button'
-            onClick={() => submitAction('income')}
-            disabled={currentPlayer !== userName}
+            onClick={() => {
+              setIsSelectingTarget(false);
+              submitAction('income');
+            }}
+            disabled={!isMyTurn || mustCoup}
           >
             Income
           </button>
@@ -160,8 +233,11 @@ const Game = () => {
 
           <button
             className='foreign-aid-button'
-            onClick={() => submitAction('foreign aid')}
-            disabled={currentPlayer !== userName}
+            onClick={() => {
+              setIsSelectingTarget(false);
+              submitAction('foreign aid');
+            }}
+            disabled={!isMyTurn || mustCoup}
           >
             Foreign Aid
           </button>
@@ -172,7 +248,7 @@ const Game = () => {
               setPendingAction('steal');
               setIsSelectingTarget(true);
             }}
-            disabled={currentPlayer !== userName}
+            disabled={!isMyTurn || mustCoup}
           >
             Steal
           </button>
@@ -183,43 +259,76 @@ const Game = () => {
               setPendingAction('assassinate');
               setIsSelectingTarget(true);
             }}
-            disabled={currentPlayer !== userName}
+            disabled={!isMyTurn || mustCoup}
           >
             Assassinate
           </button>
 
           <button
             className='tax-button'
-            onClick={() => submitAction('tax')}
-            disabled={currentPlayer !== userName}
+            onClick={() => {
+              setIsSelectingTarget(false);
+              submitAction('tax');
+            }}
+            disabled={!isMyTurn || mustCoup}
           >
             Tax
           </button>
 
           <button
             className='exchange-button'
-            onClick={() => submitAction('exchange')}
-            disabled={currentPlayer !== userName}
+            onClick={() => {
+              setIsSelectingTarget(false);
+              submitAction('exchange');
+            }}
+            disabled={!isMyTurn || mustCoup}
           >
             Exchange
           </button>
         </div>
-        {awaitingResponse && currentPlayer !== userName && (
-          <div className="challenge-block-container">
-            <p>
-              {awaitingResponse.actor} is attempting to {awaitingResponse.action}
-              {awaitingResponse.target ? ` against ${awaitingResponse.target}` : ''}.
-            </p>
-            <button onClick={() => socket.emit('challenge')}>Challenge</button>
 
-            {awaitingResponse.target === userName && (
-              <button onClick={() => socket.emit('block')}>Block</button>
-            )}
+        {/* Challenge/Block Overlay*/}
+        {awaitingResponse && (
+          ((awaitingResponse.type === 'action' && userName !== awaitingResponse.actor) ||
+          (awaitingResponse.type === 'block' && userName === awaitingResponse.actor)) && (
+            <div className="popup-overlay">
+              <div className="popup-content" style={{ padding: '20px', textAlign: 'center', color: 'white' }}>
+                {countdown !== null && (
+                   <div className="countdown-bar-container">
+                   <div 
+                     className="countdown-bar"
+                     style={{ width: `${(countdown / 10) * 100}%` }}
+                   />
+                 </div>
+                )}
+                {countdown !== null && (
+                  <p style={{ 
+                    marginTop: '10px',
+                    color: countdown <= 3 ? 'red' : 'white', 
+                    fontWeight: countdown <= 3 ? 'bold' : 'normal'
+                  }}>
+                    Time left: {countdown}s
+                  </p>
+                )}
+                <p style={{ marginBottom: '20px', fontSize: '1.1rem' }}>
+                  {awaitingResponse.type === 'block'
+                    ? `${awaitingResponse.blocker} is blocking ${awaitingResponse.action} with ${awaitingResponse.requiredCards.join(' or ')}.`
+                    : `${awaitingResponse.actor} is attempting to ${awaitingResponse.action}${awaitingResponse.target ? ` against ${awaitingResponse.target}` : ''}.`}
+                </p>
 
-            <button onClick={() => socket.emit('pass')}>Pass</button>
-          </div>
+                <button className="small-button" onClick={() => socket.emit('challenge')}>
+                  Challenge
+                </button>
+
+                {awaitingResponse.type === 'action' && awaitingResponse.target === userName && (
+                  <button className="small-button" onClick={() => socket.emit('block')}>
+                    Block
+                  </button>
+                )}
+              </div>
+            </div>
+          )
         )}
-
       </main>
 
       {/* Event Log */}

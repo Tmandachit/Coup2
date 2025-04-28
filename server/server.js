@@ -44,7 +44,6 @@ function generateSixDigitCode() {
 }
 
 // User Registration
-
 app.post("/register", async (req, res) => {
   const { firstName, lastName, email, username, password } = req.body;
 
@@ -219,7 +218,6 @@ app.get('/lobby/:lobbyCode/players', (req, res) => {
   }
 });
 
-
 // Socket.IO connection handler for real-time events
 io.on('connection', (socket) => {
   console.log(`User connected: ${socket.id}`);
@@ -270,7 +268,6 @@ io.on('connection', (socket) => {
       }
     }
   });
-  
 
   // Handle Ready Up
   socket.on('playerReady', ({ lobbyCode, userName, ready }) => {
@@ -332,25 +329,6 @@ io.on('connection', (socket) => {
 
     // ensure that full player data is only sent to corresponding user, with only public info for others
     if (game) {
-      // const socketUser = userSockets[socket.id];
-      // const yourName = socketUser?.username;
-
-      // const sanitizedPlayers = game.players.map((player) => {
-      //   if (player.name === yourName) {
-      //     // Send full data for current player
-      //     return player;
-      //   } else {
-      //     // Send only public info for opponents
-      //     return {
-      //       name: player.name,
-      //       money: player.money,
-      //       influenceCount: player.influences.length // just send the amount of influence cards
-      //     };
-      //   }
-      // });
-
-      // const playerData = game.getPlayerView(socket.id);
-
       // emit game-update event on a player-by-player basis - not all players receive the same data
       game.players.forEach(player => {
         const socketId = game.nameSocketMap[player.name];
@@ -364,7 +342,6 @@ io.on('connection', (socket) => {
       console.warn(`No game found for lobby ${lobbyCode}`);
     }
   });
-  
 
   // Handle player disconnection
   socket.on('disconnecting', () => {
@@ -389,6 +366,29 @@ io.on('connection', (socket) => {
     console.log(`User disconnected: ${socket.id}`);
   });
 
+  // Handle Challenge
+  socket.on('challenge', () => {
+    const user = userSockets[socket.id];
+    if (!user) return;
+  
+    const { lobby } = user;
+    const game = games[lobby];
+    if (!game || !game.awaitingResponse) return;
+  
+    game.handleChallenge(user.username);
+  });
+
+  // Handle block
+  socket.on('block', () => {
+    const user = userSockets[socket.id];
+    if (!user) return;
+    const game = games[user.lobby];
+    if (!game) return;
+  
+    game.handleBlock(user.username);
+  });  
+
+  // Handle Action submission
   socket.on('submit-action', ({ playerName, action, target }) => {    
     const user = userSockets[socket.id];
     if (!user) return;
