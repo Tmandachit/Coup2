@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import rulesImage from './CoupRule.png';
 import cheatSheetImage from './CoupCheatSheet.png';
 import useSocket from '../../Socket/useSocket';
@@ -130,6 +131,25 @@ const Game = () => {
       socket.off('game-update', handleGameUpdate);
     };
   }, [socket, lobbyCode]);
+
+  useEffect(() => {
+    if (winner && players.length > 0) {
+      const playerUsernames = players.map(p => p.name);
+      console.log("Game over! Winner:", winner);
+      console.log("Updating stats for players:", playerUsernames);
+  
+      axios.post("http://localhost:5001/update-stats", {
+        players: playerUsernames,
+        winner: winner
+      })
+      .then(res => {
+        console.log("Update response:", res.data);
+      })
+      .catch(err => {
+        console.error("Stat update error:", err);
+      });
+    }
+  }, [winner, players]);
 
   const myPlayer = players.find(p => p.name === userName);
   const opponents = players.filter(p => p.name !== userName);
