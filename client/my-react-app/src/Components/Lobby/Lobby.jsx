@@ -4,7 +4,8 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import useSocket from '../../Socket/useSocket';
 import axios from "axios";
 import { toast } from 'react-toastify';
-import { FaMusic, FaMusicSlash } from 'react-icons/fa';
+import { FaMusic } from 'react-icons/fa';
+import { MdMusicOff } from 'react-icons/md';
 import "./Lobby.css";
 
 const Lobby = () => {
@@ -18,6 +19,9 @@ const Lobby = () => {
   const [isReady, setIsReady] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
 
+  const [musicOn, setMusicOn] = useState(true);
+  const audioRef = useRef(null);
+  
   const userName = sessionStorage.getItem("userId");
 
   useEffect(() => {
@@ -55,7 +59,7 @@ const Lobby = () => {
   }, [socket, navigate, lobbyCode]);
 
    // Music controller
-   useEffect(() => {
+  useEffect(() => {
     if (audioRef.current) {
       if (musicOn) {
         audioRef.current.play().catch((e) => console.log('Autoplay prevented', e));
@@ -81,13 +85,14 @@ const Lobby = () => {
     <div className="lobbyContainer">
      <audio ref={audioRef} loop src="/lobby-music.mp3" />
       <div className="lobbyContent">
+
       {/* Music Toggle Button */}
       <button
           className="musicToggleButton"
           onClick={() => setMusicOn(!musicOn)}
           title={musicOn ? "Turn Music Off" : "Turn Music On"}
         >
-          {musicOn ? <FaMusic size={24} /> : <FaMusicSlash size={24} />}
+          {musicOn ? <FaMusic size={20} /> : <MdMusicOff size={20} />}
         </button>
 
         <h1

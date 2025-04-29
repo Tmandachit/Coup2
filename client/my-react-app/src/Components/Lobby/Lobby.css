@@ -254,20 +254,24 @@
   }
 
   /* Music Toggle Button */
-.musicToggleButton {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-  z-index: 2;
-  color: var(--primary-light);
-  transition: transform 0.3s ease, color 0.3s ease;
-}
-
-.musicToggleButton:hover {
-  transform: scale(1.2);
-  color: var(--accent-purple);
-}
+  .musicToggleButton {
+    position: fixed;
+    top: 0px;
+    left: 370px;
+    background: var(--bg-medium);
+    border: 2px solid var(--primary-light);
+    width: 36px;     
+    height: 36px;
+    cursor: pointer;
+    padding: 6px;
+    color: var(--primary-light);
+    font-size: 10px;
+    z-index: 1000;
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+  
+  .musicToggleButton:hover {
+    transform: scale(1.2);
+    color: var(--accent-purple);
+  }
+  
