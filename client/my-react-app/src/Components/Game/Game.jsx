@@ -246,7 +246,7 @@ const Game = () => {
               setPendingAction('coup');
               setIsSelectingTarget(true);
             }}
-            disabled={currentPlayer !== userName}
+            disabled={currentPlayer !== userName || myPlayer?.money < 7}
           >
             Coup
           </button>
