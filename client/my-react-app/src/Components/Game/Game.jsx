@@ -237,7 +237,7 @@ const Game = () => {
             }}
             disabled={!isMyTurn || mustCoup}
           >
-            Income
+            {mustCoup ? "You must Coup!": "Income"}
           </button>
 
           <button
@@ -259,7 +259,7 @@ const Game = () => {
             }}
             disabled={!isMyTurn || mustCoup}
           >
-            Foreign Aid
+            {mustCoup ? "You must Coup!": "Foreign Aid"}
           </button>
 
           <button
@@ -270,7 +270,7 @@ const Game = () => {
             }}
             disabled={!isMyTurn || mustCoup}
           >
-            Steal
+            {mustCoup ? "You must Coup!": "Steal"}
           </button>
 
           <button
@@ -279,9 +279,9 @@ const Game = () => {
               setPendingAction('assassinate');
               setIsSelectingTarget(true);
             }}
-            disabled={!isMyTurn || mustCoup}
+            disabled={!isMyTurn || mustCoup || myPlayer?.money < 3}
           >
-            Assassinate
+            {mustCoup ? "You must Coup!": "Assassinate"}
           </button>
 
           <button
@@ -292,7 +292,7 @@ const Game = () => {
             }}
             disabled={!isMyTurn || mustCoup}
           >
-            Tax
+            {mustCoup ? "You must Coup!": "Tax"}
           </button>
 
           <button
@@ -303,7 +303,7 @@ const Game = () => {
             }}
             disabled={!isMyTurn || mustCoup}
           >
-            Exchange
+            {mustCoup ? "You must Coup!": "Exchange"}
           </button>
         </div>
 
