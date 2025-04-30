@@ -450,6 +450,19 @@ io.on('connection', (socket) => {
     game.handleBlock(user.username);
   });  
 
+  // Handle Submit Exhange
+  socket.on('submit-exchange', ({ lobbyCode, chosenCards }) => {
+    const user = userSockets[socket.id];
+    if (!user) return;
+  
+    const { username } = user;
+    const game = games[lobbyCode];
+    if (!game) return;
+  
+    game.handleExchangeSelection(username, chosenCards);
+  });
+  
+
   // Handle Action submission
   socket.on('submit-action', ({ playerName, action, target }) => {    
     const user = userSockets[socket.id];
