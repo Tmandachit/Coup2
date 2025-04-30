@@ -224,6 +224,39 @@ app.post("/changeprofile", async (req, res) => {
   }
 });
 
+// Increment Games Played and Winner
+app.post("/update-stats", async (req, res) => {
+  const { players, winner } = req.body;
+
+  if (!players || !winner) {
+    return res.status(400).json({ message: "Missing players or winner" });
+  }
+
+  try {
+    for (const username of players) {
+      const userRef = doc(db, "players", username);
+      const userDoc = await getDoc(userRef);
+
+      if (userDoc.exists()) {
+        const data = userDoc.data();
+        const isWinner = username === winner;
+
+        await setDoc(userRef, {
+          ...data,
+          gamesPlayed: (data.gamesPlayed || 0) + 1,
+          gamesWon: (data.gamesWon || 0) + (isWinner ? 1 : 0),
+        });
+      }
+    }
+
+    res.status(200).json({ message: "Player stats updated." });
+  } catch (err) {
+    console.error("Error updating stats:", err);
+    res.status(500).json({ message: "Failed to update stats." });
+  }
+});
+
+
 // Create a new lobby
 app.get('/createlobby', (req, res) => {
   let code = '';

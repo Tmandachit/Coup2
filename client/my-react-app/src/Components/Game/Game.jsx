@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import rulesImage from './CoupRule.png';
 import cheatSheetImage from './CoupCheatSheet.png';
 import useSocket from '../../Socket/useSocket';
@@ -142,6 +143,25 @@ const Game = () => {
     };
   }, [socket, lobbyCode]);
 
+  useEffect(() => {
+    if (winner && players.length > 0) {
+      const playerUsernames = players.map(p => p.name);
+      console.log("Game over! Winner:", winner);
+      console.log("Updating stats for players:", playerUsernames);
+  
+      axios.post("http://localhost:5001/update-stats", {
+        players: playerUsernames,
+        winner: winner
+      })
+      .then(res => {
+        console.log("Update response:", res.data);
+      })
+      .catch(err => {
+        console.error("Stat update error:", err);
+      });
+    }
+  }, [winner, players]);
+
   const myPlayer = players.find(p => p.name === userName);
   const opponents = players.filter(p => p.name !== userName);
   const isMyTurn = currentPlayer === userName;
@@ -271,7 +291,7 @@ const Game = () => {
             }}
             disabled={!isMyTurn || mustCoup}
           >
-            Income
+            {mustCoup ? "You must Coup!": "Income"}
           </button>
 
           <button
@@ -280,7 +300,7 @@ const Game = () => {
               setPendingAction('coup');
               setIsSelectingTarget(true);
             }}
-            disabled={currentPlayer !== userName}
+            disabled={currentPlayer !== userName || myPlayer?.money < 7}
           >
             Coup
           </button>
@@ -293,7 +313,7 @@ const Game = () => {
             }}
             disabled={!isMyTurn || mustCoup}
           >
-            Foreign Aid
+            {mustCoup ? "You must Coup!": "Foreign Aid"}
           </button>
 
           <button
@@ -304,7 +324,7 @@ const Game = () => {
             }}
             disabled={!isMyTurn || mustCoup}
           >
-            Steal
+            {mustCoup ? "You must Coup!": "Steal"}
           </button>
 
           <button
@@ -313,9 +333,9 @@ const Game = () => {
               setPendingAction('assassinate');
               setIsSelectingTarget(true);
             }}
-            disabled={!isMyTurn || mustCoup}
+            disabled={!isMyTurn || mustCoup || myPlayer?.money < 3}
           >
-            Assassinate
+            {mustCoup ? "You must Coup!": "Assassinate"}
           </button>
 
           <button
@@ -326,7 +346,7 @@ const Game = () => {
             }}
             disabled={!isMyTurn || mustCoup}
           >
-            Tax
+            {mustCoup ? "You must Coup!": "Tax"}
           </button>
 
           <button
@@ -337,7 +357,7 @@ const Game = () => {
             }}
             disabled={!isMyTurn || mustCoup}
           >
-            Exchange
+            {mustCoup ? "You must Coup!": "Exchange"}
           </button>
         </div>
 

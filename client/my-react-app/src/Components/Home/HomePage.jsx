@@ -97,16 +97,20 @@ const HomePage = () => {
       {isLeaderboardOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h2>Leaderboard</h2>
-            <ul>
+            <h1>Leaderboard</h1>
+            <ul className="leaderboard-list">
               {leaderboard.length === 0 ? (
-                <li>Loading...</li>
+                <li className="leaderboard-item">Loading...</li>
               ) : (
                 leaderboard.map((player, index) => {
                   const winText = player.gamesWon === 1 ? "Win" : "Wins";
                   return (
-                    <li key={index}>
-                      0{index + 1} {player.firstName} {player.lastName} - {player.gamesWon} {winText}
+                    <li key={index} className="leaderboard-item">
+                      <span className="player-rank">0{index + 1}.</span>{' '}
+                      <span className="player-name">
+                        {player.firstName} {player.lastName}
+                      </span>{' '}
+                      <span className="player-stats">– {player.gamesWon} {winText}</span>
                     </li>
                   );
                 })
@@ -116,6 +120,7 @@ const HomePage = () => {
           </div>
         </div>
       )}
+
 
     </div>
   );

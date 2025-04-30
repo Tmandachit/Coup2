@@ -283,6 +283,33 @@ form {
   box-shadow: 0 0 15px rgba(125, 207, 247, 0.6);
 }
 
+.leaderboard-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.leaderboard-item {
+  padding: 10px 0;
+  font-size: 1.1rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.player-rank {
+  font-weight: bold;
+  color: #FFFFFF;
+  margin-right: 5px;
+}
+
+.player-name {
+  font-weight: bold;
+  color: #FFFFFF;
+}
+
+.player-stats {
+  color: #FFFFFF;
+}
+
 /* Responsive design adjustments */
 @media (max-width: 768px) {
   .login-container h1, .homeContainer h1 {
