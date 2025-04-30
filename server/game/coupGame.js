@@ -129,6 +129,27 @@ class Game {
   
     this.startChallengeTimer();
   }  
+
+  handleExchangeSelection(playerName, chosenCards) {
+    const player = this.players[this.nameIndexMap[playerName]];
+    
+    if (!player.exchangeCards || chosenCards.length !== 2) return;
+  
+    const validChoices = chosenCards.every(card => player.exchangeCards.includes(card));
+    if (!validChoices) return;
+  
+    const returnCards = player.exchangeCards.filter(card => !chosenCards.includes(card));
+    this.deck.push(...returnCards);
+    this.deck = shuffle(this.deck);
+  
+    player.influences = [...chosenCards];
+    delete player.exchangeCards;
+  
+    this.broadcast(`${playerName} has finished exchanging cards.`);
+    this.endTurn();
+    this.updateGameState();
+  }
+  
   
   handleSubmit(action, targetName = null) {
     console.log(`Handling action: ${action} Target: ${targetName}`);
@@ -218,7 +239,7 @@ class Game {
           action: 'exchange',
           actor: player.name,
           requiredCards: ['ambassador'],
-          canBeBlocked: false, // Exchange can only be challenged
+          canBeBlocked: false, 
         };
         this.challengeWindowOpen = true;
         this.broadcast(`${player.name} claims Ambassador to Exchange cards. Waiting for challenge...`);
@@ -282,6 +303,20 @@ class Game {
         actorPlayer.money += 3;
         this.broadcast(`${actor} successfully collects Tax (+3 coins).`);
         break;
+
+      case 'exchange':
+        const drawnCards = [this.deck.pop(), this.deck.pop()];
+        actorPlayer.exchangeCards = [...actorPlayer.influences, ...drawnCards];
+
+        console.log(this.nameSocketMap[actor])
+        this.io.to(this.nameSocketMap[actor]).emit('exchange-options', {
+          type: 'exchange',
+          actor,
+          cards: actorPlayer.exchangeCards
+        });                
+        this.broadcast(`${actor} is exchanging cards...`);
+        return;
+        
     }
   
     this.endTurn();

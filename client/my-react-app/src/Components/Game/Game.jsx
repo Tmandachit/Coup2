@@ -6,6 +6,7 @@ import useSocket from '../../Socket/useSocket';
 import PlayerStation from '../PlayerStation/PlayerStation';
 import confetti from 'canvas-confetti';
 import "./Game.css";
+import Card from "../Card/Card";
 
 
 const Game = () => {
@@ -25,8 +26,7 @@ const Game = () => {
   const [popupImage, setPopupImage] = useState(null);
   const [winner, setWinner] = useState(null);
   const [isWinner, setIsWinner] = useState(false);
-
-  
+  const [exchangeOptions, setExchangeOptions] = useState(null);
 
   const handleShowPopup = (type) => {
     if (type === 'rules') {
@@ -91,14 +91,25 @@ const Game = () => {
         setTimeout(() => {
           document.body.removeChild(canvas);
         }, 5000);
-      } 
+      }    
     });
+
+    socket.on('exchange-options', (data) => {
+      console.log(`Recieved ${data.cards}`)
+      if (data.actor === userName) {
+        setExchangeOptions({
+          cards: data.cards,
+          selected: []
+        });
+      }
+    });  
   
     return () => {
       socket.off('game-log');
       socket.off('awaiting-response');
       socket.off('clear-awaiting-response');
       socket.off('game-over');
+      socket.off('exchange-options');
     };
   }, [socket]);
   
@@ -165,6 +176,49 @@ const Game = () => {
           <div className="popup-content">
             <img src={popupImage} alt="Popup" className="popup-image" />
             <button onClick={handleClosePopup} className="close-popup-button">✕</button>
+          </div>
+        </div>
+      )}
+
+      {/* Exchange Popup */}
+      {exchangeOptions && (
+        <div className="popup-overlay">
+          <div className="popup-content exchange-popup">
+            <h2>Select 2 Cards to Keep</h2>
+            <div className="exchange-card-grid">
+              {exchangeOptions.cards.map((card, index) => (
+                <div
+                  key={index}
+                  className={`exchange-card-wrapper ${exchangeOptions.selected.includes(index) ? 'selected' : ''}`}
+                  onClick={() => {
+                    const selected = exchangeOptions.selected;
+                    const alreadySelected = selected.includes(index);
+
+                    const newSelected = alreadySelected
+                      ? selected.filter(i => i !== index)
+                      : selected.length < 2
+                        ? [...selected, index]
+                        : selected;
+
+                    setExchangeOptions({ ...exchangeOptions, selected: newSelected });
+                  }}
+                >
+                  <Card role={card} isRevealed={true} />
+                </div>
+              ))}
+            </div>
+
+            <button
+              className="small-button"
+              disabled={exchangeOptions.selected.length !== 2}
+              onClick={() => {
+                const chosen = exchangeOptions.selected.map(i => exchangeOptions.cards[i]);
+                socket.emit('submit-exchange', { lobbyCode, chosenCards: chosen });
+                setExchangeOptions(null);
+              }}
+            >
+              Submit Selection
+            </button>
           </div>
         </div>
       )}
