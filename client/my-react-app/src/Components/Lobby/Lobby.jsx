@@ -19,7 +19,7 @@ const Lobby = () => {
   const [isReady, setIsReady] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
 
-  const [musicOn, setMusicOn] = useState(true);
+  const [musicOn, setMusicOn] = useState(false);
   const audioRef = useRef(null);
   
   const userName = sessionStorage.getItem("userId");
