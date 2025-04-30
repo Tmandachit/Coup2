@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Profile.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -7,18 +7,52 @@ import { toast } from "react-toastify";
 const Profile = () => {
   const navigate = useNavigate();
 
-  // Password const
+  // Password modal state
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  // Profile const
+  // Profile edit modal state
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [firstName, setFirstName] = useState(sessionStorage.getItem("firstName") || "");
+  const [lastName, setLastName] = useState(sessionStorage.getItem("lastName") || "");
 
-  // Change user password
+  // Game stats state
+  const [gamesPlayed, setGamesPlayed] = useState(0);
+  const [gamesWon, setGamesWon] = useState(0);
+  const [winRate, setWinRate] = useState("0.0");
+
+  // Fetch user stats on load
+  useEffect(() => {
+    const fetchStats = async () => {
+      const userId = sessionStorage.getItem("userId");
+      if (!userId) return;
+  
+      try {
+        const response = await axios.get(`http://localhost:5001/profile/${userId}`);
+        const data = response.data;
+  
+        // Update session storage
+        sessionStorage.setItem("gamesPlayed", data.gamesPlayed);
+        sessionStorage.setItem("gamesWon", data.gamesWon);
+        sessionStorage.setItem("firstName", data.firstName);
+        sessionStorage.setItem("lastName", data.lastName);
+  
+        // Update component state
+        setGamesPlayed(data.gamesPlayed);
+        setGamesWon(data.gamesWon);
+        setWinRate(
+          data.gamesPlayed > 0 ? ((data.gamesWon / data.gamesPlayed) * 100).toFixed(1) : "0.0"
+        );
+      } catch (error) {
+        console.error("Failed to fetch user stats:", error);
+      }
+    };
+  
+    fetchStats();
+  }, []);  
+
   const handleChangePassword = async (e) => {
     e.preventDefault();
 
@@ -56,7 +90,6 @@ const Profile = () => {
     }
   };
 
-  // Change user profile (first and last name)
   const handleChangeProfile = async (e) => {
     e.preventDefault();
 
@@ -89,10 +122,6 @@ const Profile = () => {
       console.error("Change profile error:", error);
     }
   };
-
-  const gamesPlayed = parseInt(sessionStorage.getItem("gamesPlayed")) || 0;
-  const gamesWon = parseInt(sessionStorage.getItem("gamesWon")) || 0;
-  const winRate = gamesPlayed > 0 ? ((gamesWon / gamesPlayed) * 100).toFixed(1) : "0.0";
 
   return (
     <div className="profile-container">

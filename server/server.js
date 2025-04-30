@@ -224,6 +224,28 @@ app.post("/changeprofile", async (req, res) => {
   }
 });
 
+// Get Password for Win Update
+app.get("/profile/:username", async (req, res) => {
+  const { username } = req.params;
+  try {
+    const userRef = doc(db, "players", username);
+    const userDoc = await getDoc(userRef);
+
+    if (!userDoc.exists()) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const data = userDoc.data();
+    const { password, ...safeData } = data;
+
+    res.status(200).json(safeData);
+  } catch (error) {
+    console.error("Error fetching profile:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
 // Increment Games Played and Winner
 app.post("/update-stats", async (req, res) => {
   const { players, winner } = req.body;
