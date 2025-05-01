@@ -28,6 +28,8 @@ const Game = () => {
   const [winner, setWinner] = useState(null);
   const [isWinner, setIsWinner] = useState(false);
   const [exchangeOptions, setExchangeOptions] = useState(null);
+  const [discardPrompt, setDiscardPrompt] = useState(null);
+
 
   const handleShowPopup = (type) => {
     if (type === 'rules') {
@@ -96,14 +98,23 @@ const Game = () => {
     });
 
     socket.on('exchange-options', (data) => {
-      console.log(`Recieved ${data.cards}`)
       if (data.actor === userName) {
         setExchangeOptions({
+          ammount: data.ammount,
           cards: data.cards,
           selected: []
         });
       }
-    });  
+    });
+    
+    socket.on('awaiting-discard', (data) => {
+      if (data.player === userName) {
+        setDiscardPrompt({
+          cards: data.cards,
+          selected: null
+        });
+      }
+    });
   
     return () => {
       socket.off('game-log');
@@ -111,6 +122,7 @@ const Game = () => {
       socket.off('clear-awaiting-response');
       socket.off('game-over');
       socket.off('exchange-options');
+      socket.off('awaiting-discard');
     };
   }, [socket]);
   
@@ -200,11 +212,43 @@ const Game = () => {
         </div>
       )}
 
+      {/* Discard Popup */}
+      {discardPrompt && (
+        <div className="popup-overlay">
+          <div className="popup-content exchange-popup">
+            <h2>Choose a Card to Discard</h2>
+            <div className="exchange-card-grid">
+              {discardPrompt.cards.map((card, index) => (
+                <div
+                  key={index}
+                  className={`exchange-card-wrapper ${discardPrompt.selected === index ? 'selected' : ''}`}
+                  onClick={() => setDiscardPrompt({ ...discardPrompt, selected: index })}
+                >
+                  <Card role={card} isRevealed={true} />
+                </div>
+              ))}
+            </div>
+
+            <button
+              className="small-button"
+              disabled={discardPrompt.selected === null}
+              onClick={() => {
+                const chosenCard = discardPrompt.cards[discardPrompt.selected];
+                socket.emit('submit-discard', { lobbyCode, card: chosenCard });
+                setDiscardPrompt(null);
+              }}
+            >
+              Discard Selected Card
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Exchange Popup */}
       {exchangeOptions && (
         <div className="popup-overlay">
           <div className="popup-content exchange-popup">
-            <h2>Select 2 Cards to Keep</h2>
+            <h2>Select {exchangeOptions.ammount} Card(s) to Keep</h2>
             <div className="exchange-card-grid">
               {exchangeOptions.cards.map((card, index) => (
                 <div
@@ -216,7 +260,7 @@ const Game = () => {
 
                     const newSelected = alreadySelected
                       ? selected.filter(i => i !== index)
-                      : selected.length < 2
+                      : selected.length < exchangeOptions.ammount
                         ? [...selected, index]
                         : selected;
 
@@ -230,7 +274,7 @@ const Game = () => {
 
             <button
               className="small-button"
-              disabled={exchangeOptions.selected.length !== 2}
+              disabled={exchangeOptions.selected.length !== exchangeOptions.ammount}
               onClick={() => {
                 const chosen = exchangeOptions.selected.map(i => exchangeOptions.cards[i]);
                 socket.emit('submit-exchange', { lobbyCode, chosenCards: chosen });
@@ -371,7 +415,7 @@ const Game = () => {
                    <div className="countdown-bar-container">
                    <div 
                      className="countdown-bar"
-                     style={{ width: `${(countdown / 10) * 100}%` }}
+                     style={{ width: `${(countdown / 10) * 95}%` }}
                    />
                  </div>
                 )}
@@ -403,6 +447,23 @@ const Game = () => {
             </div>
           )
         )}
+
+        {/* Waiting Timer */}
+        {awaitingResponse && !(
+            (awaitingResponse.type === 'action' && userName !== awaitingResponse.actor) ||
+            (awaitingResponse.type === 'block' && userName === awaitingResponse.actor)
+          ) && (
+            <div className="popup-overlay">
+              <div className="popup-content" style={{ padding: '20px', textAlign: 'center', color: 'white' }}>
+                <p style={{ marginBottom: '10px', fontSize: '1.1rem' }}>
+                  {awaitingResponse.type === 'block'
+                    ? `${awaitingResponse.actor} has ${countdown}s to respond to the block.`
+                    : `${awaitingResponse.actor} has ${countdown}s to be challenged.`}
+                </p>
+              </div>
+            </div>
+          )}
+
       </main>
 
       {/* Event Log */}

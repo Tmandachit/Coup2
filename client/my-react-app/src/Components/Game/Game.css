@@ -2,7 +2,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-image: url('../Assets/coup_background.png'); /* Replace with your actual image path */
+  background-image: url('../Assets/coup_background.png');
   background-position: center center;
   background-size: cover;
   background-attachment: fixed;
@@ -12,9 +12,9 @@
   padding-bottom: 8vh;
 }
 
-/* Add an overlay to ensure text remains readable against the background */
 .game-page::before {
   content: '';
+  overflow: hidden;
   position: absolute;
   top: 0;
   left: 0;
@@ -24,7 +24,6 @@
   z-index: 0;
 }
 
-/* Ensure all content appears above the background overlay */
 .game-layout {
   display: flex;
   flex-direction: column;
@@ -36,11 +35,10 @@
   max-height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
-  position: relative; /* Added to ensure stacking context */
-  z-index: 1; /* Ensure content appears above the background overlay */
+  position: relative; 
+  z-index: 1
 }
 
-/* Update other containers to ensure they appear above the background */
 .top-left-buttons {
   position: absolute;
   top: 1vh;
@@ -110,7 +108,7 @@
   justify-content: center;
   flex-wrap: wrap;
   gap: 2vw;
-  margin-top: 1vh; /* Reduced from 4vh */
+  margin-top: 1vh;
   width: 90%;
   position: relative;
 }
@@ -130,7 +128,7 @@
   display: flex;
   justify-content: center;
   width: 90%;
-  margin: 2vh 0 0 0; /* Reduced from 5vh */
+  margin: 2vh 0 0 0;
   position: relative;
 }
 
@@ -166,23 +164,23 @@
 
 .action-buttons-container button {
   color: white;
-  padding: 1vh 1vw; /* Increased horizontal padding for text */
+  padding: 1vh 1vw;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
   transition: all 0.3s ease;
-  font-size: 0.85rem; /* Slightly smaller font to fit text */
+  font-size: 0.85rem;
   white-space: nowrap;
   min-width: 0;
   flex: 1;
   text-transform: uppercase;
-  letter-spacing: 0.5px; /* Reduced letter spacing to help fit text */
+  letter-spacing: 0.5px;
   position: relative;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  height: 4vh; /* Fixed height for all buttons */
+  height: 4vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -254,7 +252,7 @@
 }
 
 .action-buttons-container button:hover {
-  transform: translateY(-2px); /* Reduced lift for better fit */
+  transform: translateY(-2px);
   box-shadow: 0 7px 14px rgba(0, 0, 0, 0.4);
 }
 
@@ -288,12 +286,10 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(7, 13, 27, 0.8);
   z-index: 1000;
   display: flex;
   justify-content: center;
   align-items: center;
-  backdrop-filter: blur(5px);
 }
 
 .popup-content {
@@ -533,7 +529,6 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.8);
   z-index: 9999;
   display: flex;
   align-items: center;
