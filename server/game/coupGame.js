@@ -66,12 +66,12 @@ class Game {
       claimedPlayer.influences.splice(index, 1);
       claimedPlayer.influences.push(this.deck.pop());
   
-      const lostCard = challenger.influences.pop();
       if (challenger.influences.length === 0) challenger.isDead = true;
       this.checkWinCondition();
   
-      this.broadcast(`${challengerName} challenges ${claimedPlayerName}... and fails! They lose a ${lostCard}.`);
-  
+      this.broadcast(`${challengerName} challenges ${claimedPlayerName}'s ${action}... and fails!`);
+      this.promptDiscard(challengerName);
+
       if (type === 'block') {
         this.awaitingResponse = null;
         this.endTurn();
@@ -86,7 +86,7 @@ class Game {
       if (claimedPlayer.influences.length === 0) claimedPlayer.isDead = true;
       this.checkWinCondition();
   
-      this.broadcast(`${challengerName} challenges ${claimedPlayerName}... and succeeds! ${claimedPlayerName} loses a ${lostCard}.`);
+      this.broadcast(`${challengerName} challenges ${claimedPlayerName}'s ${action}... and succeeds! ${claimedPlayerName} loses a ${lostCard}.`);
   
       this.awaitingResponse = null;
       this.endTurn();
@@ -147,6 +147,42 @@ class Game {
   
     this.broadcast(`${playerName} has finished exchanging cards.`);
     this.endTurn();
+    this.updateGameState();
+  }
+
+  promptDiscard(playerName) {
+    const player = this.players[this.nameIndexMap[playerName]];
+    if (player.influences.length === 1) {
+      const lost = player.influences.pop();
+      player.isDead = true;
+      this.broadcast(`${playerName} loses their last influence (${lost}).`);
+      this.checkWinCondition();
+      this.updateGameState();
+      return;
+    }
+  
+    this.io.to(this.nameSocketMap[playerName]).emit('awaiting-discard', {
+      player: playerName,
+      cards: player.influences
+    });
+  
+    this.broadcast(`${playerName} must choose a card to discard.`);
+  }
+  
+  handleDiscard(playerName, chosenCard) {
+    const player = this.players[this.nameIndexMap[playerName]];
+  
+    const cardIndex = player.influences.indexOf(chosenCard);
+    if (cardIndex === -1) {
+      console.warn(`${playerName} tried to discard an invalid card.`);
+      return;
+    }
+  
+    player.influences.splice(cardIndex, 1);
+    if (player.influences.length === 0) player.isDead = true;
+  
+    this.broadcast(`${playerName} discards a ${chosenCard}.`);
+    this.checkWinCondition();
     this.updateGameState();
   }
   
@@ -250,10 +286,10 @@ class Game {
       case this.actions.COUP:
         if (player.money < 7 || !target || target.isDead) return;
         player.money -= 7;
-        const lostCard = target.influences.pop();
         if (target.influences.length === 0) target.isDead = true;
-        this.broadcast(`${player.name} coups ${target.name} (they lose a ${lostCard}).`);
+        this.broadcast(`${player.name} coups ${target.name}.`);
         this.checkWinCondition();
+        this.promptDiscard(target.name);
         break;
   
       default:
@@ -290,13 +326,18 @@ class Game {
         actorPlayer.money += stolen;
         this.broadcast(`${actor} successfully steals ${stolen} coin(s) from ${target}.`);
         break;
+
+        case 'foreign aid':
+        actorPlayer.money += 2;
+        this.broadcast(`${actor} successfully gains 2 coins from foreign aid.`);
+        break;
   
       case 'assassinate':
         actorPlayer.money -= 3;
-        const lost = targetPlayer.influences.pop();
         if (targetPlayer.influences.length === 0) targetPlayer.isDead = true;
-        this.broadcast(`${actor} successfully assassinates ${target} (they lose a ${lost}).`);
+        this.broadcast(`${actor} successfully assassinates ${target}.`);
         this.checkWinCondition()
+        this.promptDiscard(target.name);
         break;
   
       case 'tax':
@@ -304,18 +345,27 @@ class Game {
         this.broadcast(`${actor} successfully collects Tax (+3 coins).`);
         break;
 
-      case 'exchange':
-        const drawnCards = [this.deck.pop(), this.deck.pop()];
-        actorPlayer.exchangeCards = [...actorPlayer.influences, ...drawnCards];
-
-        console.log(this.nameSocketMap[actor])
-        this.io.to(this.nameSocketMap[actor]).emit('exchange-options', {
-          type: 'exchange',
-          actor,
-          cards: actorPlayer.exchangeCards
-        });                
-        this.broadcast(`${actor} is exchanging cards...`);
-        return;
+        case 'exchange':
+          const influenceCount = actorPlayer.influences.length;
+          const drawCount = influenceCount === 2 ? 2 : 1;
+          const drawnCards = [];
+      
+          for (let i = 0; i < drawCount; i++) {
+              drawnCards.push(this.deck.pop());
+          }
+      
+          actorPlayer.exchangeCards = [...actorPlayer.influences, ...drawnCards];
+      
+          this.io.to(this.nameSocketMap[actor]).emit('exchange-options', {
+              type: 'exchange',
+              ammount: drawCount,
+              actor,
+              cards: actorPlayer.exchangeCards
+          });
+      
+          this.broadcast(`${actor} is exchanging cards...`);
+          return;
+      
         
     }
   

@@ -34,3 +34,33 @@
 .player-station .card-title {
     font-size: 1.1rem;
 }
+
+.card-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .card-tooltip {
+    visibility: hidden;
+    opacity: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    color: white;
+    font-size: 0.85rem;
+    text-align: center;
+    border-radius: 8px;
+    padding: 8px;
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 180px;
+    z-index: 10;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  
+  .card-wrapper:hover .card-tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+  

@@ -483,6 +483,19 @@ io.on('connection', (socket) => {
   
     game.handleExchangeSelection(username, chosenCards);
   });
+
+  // Handle Submit Discard
+  socket.on('submit-discard', ({ lobbyCode, card }) => {
+    const user = userSockets[socket.id];
+    if (!user) return;
+
+    const { username } = user;
+    const game = games[lobbyCode];
+    if (!game) return;
+
+    game.handleDiscard(username, card);
+  });
+  
   
 
   // Handle Action submission

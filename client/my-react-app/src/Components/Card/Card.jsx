@@ -6,39 +6,43 @@ import Contessa from '../Assets/Contessa.png';
 import Duke from '../Assets/Duke.png';
 import FaceDown from '../Assets/FaceDown.png';
 
-export default function Card({ role, isRevealed}) {
-    // card role and isRevealed should be gotten from props in a higher level component
+// Description map
+const cardDescriptions = {
+    assassin: "Pay 3 coins to assassinate another player.",
+    ambassador: "Exchange your cards with 2 from the deck. Blocks stealing.",
+    captain: "Steal 2 coins from another player. Blocks stealing.",
+    contessa: "Blocks an assassination attempt.",
+    duke: "Take 3 coins via tax. Blocks foreign aid."
+};
 
-    // Function to select the card image based on role
+export default function Card({ role, isRevealed }) {
     const selectCard = (role) => {
         switch (role) {
-            case 'assassin':
-                return Assassin;
-            case 'ambassador':
-                return Ambassador;
-            case 'captain':
-                return Captain;
-            case 'contessa':
-                return Contessa;
-            case 'duke':
-                return Duke;
-            default:
-                return FaceDown;
+            case 'assassin': return Assassin;
+            case 'ambassador': return Ambassador;
+            case 'captain': return Captain;
+            case 'contessa': return Contessa;
+            case 'duke': return Duke;
+            default: return FaceDown;
         }
     };
 
-    // determine image path
-    const imagePath = isRevealed 
-        ? selectCard(role)   // show card face if isRevealed is true
-        : FaceDown; // show face-down card if isRevealed is false
+    const imagePath = isRevealed ? selectCard(role) : FaceDown;
 
     return (
         <div className="card-container">
-            <img 
-                src={imagePath} 
-                alt={isRevealed ? role : "Face Down Card"} 
-                className={`card-image ${isRevealed ? '' : 'flipped'}`}
-            />
+            <div className="card-wrapper">
+                <img 
+                    src={imagePath} 
+                    alt={isRevealed ? role : "Face Down Card"} 
+                    className={`card-image ${isRevealed ? '' : 'flipped'}`}
+                />
+                {isRevealed && (
+                    <div className="card-tooltip">
+                        {cardDescriptions[role] || "Unknown ability"}
+                    </div>
+                )}
+            </div>
             <h2 className="card-title">{isRevealed ? role : "Unknown Card"}</h2>
         </div>
     );
