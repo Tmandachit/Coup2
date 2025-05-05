@@ -7,6 +7,7 @@ const path = require('path');
 const { db } = require("./firebase"); 
 const bcrypt = require("bcrypt");
 const { doc, getDoc, setDoc, collection, query, where, getDocs, orderBy, limit } = require("firebase/firestore");
+const fs = require("fs")
 
 const Game = require('./game/coupGame.js');
 
@@ -524,12 +525,19 @@ io.on('connection', (socket) => {
 });
 
 // Serve React Frontend
-const clientBuildPath = path.join(__dirname, '../client/my-react-app/');
-app.use(express.static(clientBuildPath));
+if (fs.existsSync(path.join(__dirname, "dist"))) {
+  app.use(express.static(path.join(__dirname, "dist")));
+  
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, "dist", 'index.html'));
+  });
+}
+// const clientBuildPath = path.join(__dirname, '../client/my-react-app/');
+// app.use(express.static(clientBuildPath));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(clientBuildPath, 'index.html'));
-});
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(clientBuildPath, 'index.html'));
+// });
 
 // Start the server
 const PORT = process.env.PORT || 5001;
