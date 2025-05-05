@@ -17,7 +17,7 @@ const HomePage = () => {
 
   const fetchLeaderboard = async () => {
     try {
-      const response = await axios.post("http://localhost:5001/leaderboard");
+      const response = await axios.post(`${import.meta.env.VITE_URL}/leaderboard`);
 
       if (response.status === 200) {
         setLeaderboard(response.data);
@@ -31,7 +31,7 @@ const HomePage = () => {
 
   const handleCreateGame = async () => {
     try {
-      const response = await fetch("http://localhost:5001/createlobby");
+      const response = await fetch(`${import.meta.env.VITE_URL}/createlobby`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);

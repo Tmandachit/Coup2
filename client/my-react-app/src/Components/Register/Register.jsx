@@ -22,7 +22,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5001/register", formData);
+      const response = await axios.post(`${import.meta.env.VITE_URL}/register`, formData);
       toast.success(response.data.message || "Account created successfully!");
       navigate("/login");
     } catch (error) {

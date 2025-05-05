@@ -69,7 +69,7 @@ const Profile = () => {
     try {
       const userId = sessionStorage.getItem("userId");
 
-      const response = await axios.post("http://localhost:5001/changepassword", {
+      const response = await axios.post(`${import.meta.env.VITE_URL}/changepassword`, {
         userId,
         currentPassword,
         newPassword,
@@ -101,7 +101,7 @@ const Profile = () => {
     try {
       const username = sessionStorage.getItem("userId");
 
-      const response = await axios.post("http://localhost:5001/changeprofile", {
+      const response = await axios.post(`${import.meta.env.VITE_URL}/changeprofile`, {
         username,
         firstName,
         lastName,
