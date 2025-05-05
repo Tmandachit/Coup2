@@ -15,7 +15,8 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5001/login", formData);
+      const response = await axios.post(`${import.meta.env.VITE_URL}/login`, formData);
+      console.log(response);
 
       if (response.status === 200) {
         toast.success("Login successful!");

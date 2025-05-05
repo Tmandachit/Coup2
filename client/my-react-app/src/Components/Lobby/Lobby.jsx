@@ -26,7 +26,7 @@ const Lobby = () => {
 
   useEffect(() => {
     if (lobbyCode) {
-      fetch(`http://localhost:5001/lobby/${lobbyCode}/players`)
+      fetch(`${import.meta.env.VITE_URL}/lobby/${lobbyCode}/players`)
         .then((response) => {
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);

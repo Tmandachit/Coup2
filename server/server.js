@@ -31,7 +31,7 @@ const io = new Server(server, {
 // Middleware setup for CORS and JSON parsing
 app.use(cors({
   origin: allowedOrigins,                
-  methods: ['GET', 'POST'],                        
+  methods: ['GET', 'POST'],
   credentials: true,                                
 }));
 app.use(express.json());                              
