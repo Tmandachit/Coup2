@@ -412,14 +412,6 @@ const Game = () => {
             <div className="popup-overlay">
               <div className="popup-content" style={{ padding: '20px', textAlign: 'center', color: 'white' }}>
                 {countdown !== null && (
-                   <div className="countdown-bar-container">
-                   <div 
-                     className="countdown-bar"
-                     style={{ width: `${(countdown / 10) * 95}%` }}
-                   />
-                 </div>
-                )}
-                {countdown !== null && (
                   <p style={{ 
                     marginTop: '10px',
                     color: countdown <= 3 ? 'red' : 'white', 
