@@ -70,7 +70,10 @@ class Game {
       this.checkWinCondition();
   
       this.broadcast(`${challengerName} challenges ${claimedPlayerName}'s ${action}... and fails!`);
-      this.promptDiscard(challengerName);
+      console.log(`Challenger: ${challengerName}`);
+      console.log(`IndexMap entry:`, this.nameIndexMap[challengerName]);
+      console.log(`Player:`, this.players[this.nameIndexMap[challengerName]]);
+
 
       if (type === 'block') {
         this.awaitingResponse = null;
@@ -151,7 +154,9 @@ class Game {
   }
 
   promptDiscard(playerName) {
+    console.log(`Name: ${playerName}`)
     const player = this.players[this.nameIndexMap[playerName]];
+    console.log(`Player Info: ${player}`)
     if (player.influences.length === 1) {
       const lost = player.influences.pop();
       player.isDead = true;
@@ -243,7 +248,7 @@ class Game {
           action: 'assassinate',
           actor: player.name,
           target: target.name,
-          requiredCards: ['aassassin'],
+          requiredCards: ['assassin'],
           canBeBlocked: true, // Blockable by Contessa
         };
         this.challengeWindowOpen = true;
@@ -337,7 +342,7 @@ class Game {
         if (targetPlayer.influences.length === 0) targetPlayer.isDead = true;
         this.broadcast(`${actor} successfully assassinates ${target}.`);
         this.checkWinCondition()
-        this.promptDiscard(target.name);
+        this.promptDiscard(target);
         break;
   
       case 'tax':
