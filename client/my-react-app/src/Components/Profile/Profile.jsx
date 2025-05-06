@@ -30,7 +30,7 @@ const Profile = () => {
       if (!userId) return;
   
       try {
-        const response = await axios.get(`http://localhost:5001/profile/${userId}`);
+        const response = await axios.get(`${import.meta.env.VITE_URL}/profile/${userId}`);
         const data = response.data;
   
         // Update session storage
