@@ -162,7 +162,7 @@ const Game = () => {
       console.log("Game over! Winner:", winner);
       console.log("Updating stats for players:", playerUsernames);
   
-      axios.post("http://localhost:5001/update-stats", {
+      axios.post(`${import.meta.env.VITE_URL}/update-stats`, {
         players: playerUsernames,
         winner: winner
       })
