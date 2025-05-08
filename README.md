@@ -9,14 +9,19 @@ Technologies used in the creation of this webapp:
 * Deployment: Render
 
 ## How to Run Locally
-1: clone the repository 
-2: open the project with a split terminal
-3: one side: cd client/my-react-app
-  3a: other side: cd server
-4: both terminals: npm install
-5: client-side terminal: npm run dev
-  5a: server-side terminal: npx nodemon server.js
-
+1. Clone the repository  
+2. Open the project in a split terminal  
+3. In one terminal, run:  
+   `cd client/my-react-app`  
+   In the other terminal, run:  
+   `cd server`  
+4. In both terminals, run:  
+   `npm install`  
+5. In the client-side terminal, run:  
+   `npm run dev`  
+   In the server-side terminal, run:  
+   `npx nodemon server.js`
+   
 ### Where to Play
 
 The game is hosted at: [coup.chconnect.uk](https://coup.chconnect.uk)
