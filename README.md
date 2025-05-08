@@ -27,7 +27,7 @@ Technologies used in the creation of this webapp:
 * User profiles with gameplay statistics  
 * Leaderboard showcasing top players
 * Full gameplay with turn functionality through socket connections  
-* Futuristic UI with important addedd accessibility features  
+* Futuristic UI with important added accessibility features  
    
 ### Where to Play
 
