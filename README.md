@@ -21,6 +21,13 @@ Technologies used in the creation of this webapp:
    `npm run dev`  
    In the server-side terminal, run:  
    `npx nodemon server.js`
+
+## Features
+* Private lobbies with unique 6-digit join codes  
+* User profiles with gameplay statistics  
+* Leaderboard showcasing top players
+* Full gameplay with turn functionality through socket connections  
+* Futuristic UI with important addedd accessibility features  
    
 ### Where to Play
 
