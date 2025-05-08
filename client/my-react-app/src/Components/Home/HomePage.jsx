@@ -83,6 +83,12 @@ const HomePage = () => {
         </Link>
       </div>
 
+      {
+        /* Leaderboard Code 
+            This is a Stretch Goal Achieved!
+        */
+      }
+
       {/* Leaderboard Button */}
       <div className="input-group-btn">
         <button className="home" onClick={() => {

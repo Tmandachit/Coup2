@@ -86,6 +86,12 @@ const Lobby = () => {
      <audio ref={audioRef} loop src="/lobby-music.mp3" />
       <div className="lobbyContent">
 
+      {
+        /* Lobby Music Code 
+            This is a Stretch Goal Achieved!
+        */
+      }
+
       {/* Music Toggle Button */}
       <button
           className="musicToggleButton"
