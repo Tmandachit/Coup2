@@ -2,6 +2,10 @@
 
 This is an online version of the card game, Coup!
 
+Coup is a fast-paced card game of deception and strategy where players compete to eliminate their opponents. By bluffing, challenging, and using character abilities, you’ll need to be clever and bold to be the last player with influence!  
+
+Coup can be played with 2-6 players.  
+
 Technologies used in the creation of this webapp:
 * Frontend: Vite + React.js 
 * Backend: Node.js/Express.js
