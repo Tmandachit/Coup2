@@ -19,7 +19,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Segoe UI', 'Roboto', sans-serif;
-  background-image: url('/path/to/cityscape.jpg'); /* Use the same cityscape image */
+  background-image: url('../Assets/coup_background.png');
   background-position: center center;
   background-size: cover;
   background-attachment: fixed;
