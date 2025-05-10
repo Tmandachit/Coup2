@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Lobby from '../Lobby';
 
@@ -12,6 +12,11 @@ jest.mock('../../../Socket/useSocket', () => () => ({
   off: mockOff,
   emit: mockEmit,
 }));
+
+beforeAll(() => {
+  window.HTMLMediaElement.prototype.play = () => {};
+  window.HTMLMediaElement.prototype.pause = () => {};
+});
 
 // Mock sessionStorage and useNavigate
 const mockNavigate = jest.fn();
@@ -66,7 +71,10 @@ describe('Lobby', () => {
     });
 
     const callback = mockOn.mock.calls.find(call => call[0] === 'lobby-update')[1];
-    callback([{ name: 'test-user', ready: false }]);
+
+    await act(async () => {
+      callback([{ name: 'test-user', ready: false }]);
+    });
 
     const readyButton = screen.getByText('Ready Up');
     fireEvent.click(readyButton);
@@ -89,7 +97,10 @@ describe('Lobby', () => {
     render(<Lobby />, { wrapper: MemoryRouter });
 
     const callback = mockOn.mock.calls.find(call => call[0] === 'game-started')[1];
-    callback();
+
+    await act(async () => {
+      callback();
+    });
 
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith('/game?lobby=TEST123');
@@ -121,9 +132,9 @@ describe('Lobby', () => {
       ok: true,
       json: async () => ({ players: mockPlayers }),
     });
-  
+
     render(<Lobby />, { wrapper: MemoryRouter });
-  
+
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith('http://localhost:5001/lobby/TEST123/players');
       expect(screen.getByText('test-user - Ready')).toBeInTheDocument();
