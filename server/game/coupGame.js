@@ -25,7 +25,6 @@ class Game {
     }
   }
   
-
   endTurn (){
     let next = (this.currentPlayer + 1) % this.players.length;
     while (this.players[next].isDead) {
@@ -99,7 +98,6 @@ class Game {
     this.io.to(this.lobbyCode).emit('clear-awaiting-response');
   }
     
-  
   handleBlock(blockerName) {
     if (!this.awaitingResponse) return;
     
@@ -307,7 +305,6 @@ class Game {
     this.updateGameState();
   }
   
-
   resolveUnchallengedAction() {
     const { type, action, actor, target, blocker } = this.awaitingResponse || {};
     const actorPlayer = this.players[this.nameIndexMap[actor]];

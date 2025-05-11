@@ -62,7 +62,6 @@ const buildPlayers = (players) => {
     return players;
 };
 
-
 // Remove socket IDs before exporting player data
 const exportPlayers = (players) => {
     players.forEach(x => {

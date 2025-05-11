@@ -58,7 +58,7 @@ const Lobby = () => {
     };
   }, [socket, navigate, lobbyCode]);
 
-   // Music controller
+  // Music controller
   useEffect(() => {
     if (audioRef.current) {
       if (musicOn) {
@@ -68,7 +68,6 @@ const Lobby = () => {
       }
     }
   }, [musicOn]);
-
 
   // Function to start the game
   const handleStartGame = () => {

@@ -6,7 +6,6 @@ import Contessa from '../Assets/Contessa.png';
 import Duke from '../Assets/Duke.png';
 import FaceDown from '../Assets/FaceDown.png';
 
-// Description map
 const cardDescriptions = {
     assassin: "Pay 3 coins to assassinate another player.",
     ambassador: "Exchange your cards with 2 from the deck. Blocks stealing.",

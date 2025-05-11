@@ -6,26 +6,25 @@
     border-radius: 20px;
     border: 1px solid #3e71a8;
     box-shadow: 0 0 10px rgba(62, 113, 168, 0.3);
-    margin-top: 0.3vh; /* Reduced from 0.5vh */
-    padding: 0.4vh 0.8vw; /* Reduced padding */
+    margin-top: 0.3vh;
+    padding: 0.4vh 0.8vw;
     width: auto;
-    gap: 0.4vw; /* Reduced gap */
+    gap: 0.4vw; 
 }
 
 .coin-count {
-    font-size: 1.1rem; /* Reduced from 1.2rem */
+    font-size: 1.1rem;
     font-weight: bold;
-    color: #ffdb58; /* Gold color for coins */
+    color: #ffdb58;
     text-shadow: 0 0 5px rgba(255, 219, 88, 0.5);
 }
 
 .coin-image {
-    width: 1.3rem; /* Reduced from 1.5rem */
+    width: 1.3rem;
     height: 1.3rem;
     object-fit: contain;
 }
 
-/* Opponent wallet should be smaller and properly contained */
 .opponent-station .wallet-container {
     padding: 0.2vh 0.6vw;
     width: auto;
@@ -34,20 +33,20 @@
 }
 
 .opponent-station .coin-count {
-    font-size: 0.9rem; /* Reduced from 1rem */
+    font-size: 0.9rem;
 }
 
 .opponent-station .coin-image {
-    width: 1rem; /* Reduced from 1.2rem */
+    width: 1rem;
     height: 1rem;
 }
 
 /* Player wallet styling */
 .player-station .wallet-container {
-    padding: 0.5vh 1vw; /* Reduced padding */
+    padding: 0.5vh 1vw;
     width: auto;
-    max-width: 35%; /* Reduced from 40% */
-    margin: 0.5vh auto 0; /* Reduced margin */
+    max-width: 35%;
+    margin: 0.5vh auto 0;
     position: relative;
     overflow: visible;
 }
@@ -69,10 +68,10 @@
 }
 
 .player-station .coin-count {
-    font-size: 1.3rem; /* Reduced from 1.4rem */
+    font-size: 1.3rem;
 }
 
 .player-station .coin-image {
-    width: 1.6rem; /* Reduced from 1.8rem */
+    width: 1.6rem;
     height: 1.6rem;
 }

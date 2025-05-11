@@ -193,7 +193,6 @@ form {
   box-shadow: 0 0 15px rgba(204, 93, 107, 0.6);
 }
 
-
 /* Styling for the fourth button on the Home page */
 .input-group-btn:nth-child(6) .home {
   background: linear-gradient(180deg, #c9c962 0%, #d0d454 100%);
@@ -310,7 +309,6 @@ form {
   color: #FFFFFF;
 }
 
-/* Responsive design adjustments */
 @media (max-width: 768px) {
   .login-container h1, .homeContainer h1 {
     font-size: 3rem;

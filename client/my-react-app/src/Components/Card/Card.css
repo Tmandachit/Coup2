@@ -26,7 +26,6 @@
     color: inherit;
 }
 
-/* Player's card should be larger */
 .player-station .card-image {
     max-width: 150px;
 }
@@ -63,4 +62,3 @@
     visibility: visible;
     opacity: 1;
   }
-  

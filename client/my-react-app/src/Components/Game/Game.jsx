@@ -10,7 +10,6 @@ import confetti from 'canvas-confetti';
 import "./Game.css";
 import Card from "../Card/Card";
 
-
 const Game = () => {
   const [searchParams] = useSearchParams();
   const lobbyCode = searchParams.get('lobby');
@@ -30,7 +29,6 @@ const Game = () => {
   const [isWinner, setIsWinner] = useState(false);
   const [exchangeOptions, setExchangeOptions] = useState(null);
   const [discardPrompt, setDiscardPrompt] = useState(null);
-
 
   const handleShowPopup = (type) => {
     if (type === 'rules') {

@@ -3,7 +3,7 @@
     flex-direction: column;
     align-items: center;
     border-radius: 12px;
-    padding: 0.2vh 0.2vw; /* Further reduced padding */
+    padding: 0.2vh 0.2vw;
     transition: all 0.3s ease;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
     position: relative;
@@ -33,13 +33,13 @@
 }
 
 .station:hover {
-    transform: translateY(-2px); /* Even smaller movement */
+    transform: translateY(-2px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5), 0 0 25px rgba(125, 207, 247, 0.4);
 }
 
-/* Opponent stations - smaller, in a row at the top */
+/* Opponent stations */
 .opponent-station {
-    width: 14vw; /* Slightly smaller */
+    width: 14vw;
     min-width: 130px;
     max-width: 160px;
     height: auto;
@@ -49,11 +49,11 @@
     border: 1px solid #3e71a8;
 }
 
-/* Player station - larger, above action buttons */
+/* Player station */
 .player-station {
     width: 20vw;
-    min-width: 280px; /* Reduced from 300px */
-    max-width: 650px; /* Reduced from 700px */
+    min-width: 280px;
+    max-width: 650px;
     height: auto;
     background: linear-gradient(to bottom, #2a5792 0%, #1e3c6e 100%);
     color: #e0e6ff;
@@ -61,8 +61,8 @@
 }
 
 .player-name {
-    font-size: 1.3rem; /* Reduced from 1.5rem */
-    margin: 0 0 0.5vh 0; /* Reduced margin */
+    font-size: 1.3rem;
+    margin: 0 0 0.5vh 0;
     font-weight: bold;
     text-shadow: 0 0 10px rgba(125, 207, 247, 0.7);
     letter-spacing: 1px;
@@ -72,8 +72,8 @@
 }
 
 .opponent-station .player-name {
-    font-size: 1rem; /* Smaller */
-    margin-bottom: 0.3vh; /* Reduced margin */
+    font-size: 1rem;
+    margin-bottom: 0.3vh;
 }
 
 /* Display cards in a row */
@@ -82,7 +82,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    margin-bottom: 0.3vh; /* Reduced from 0.5vh */
+    margin-bottom: 0.3vh;
     width: 100%;
     position: relative;
     z-index: 2;
@@ -90,8 +90,8 @@
 
 /* Adjust card sizes based on station type */
 .opponent-station .card-container {
-    transform: scale(0.55); /* Smaller scale */
-    margin: -3.5vh -1.5vw; /* Increased negative margin to compact */
+    transform: scale(0.55);
+    margin: -3.5vh -1.5vw;
     transition: all 0.3s ease;
 }
 
@@ -103,14 +103,14 @@
 /* Make sure wallet takes less space in player station */
 .opponent-station .wallet-container {
     flex: 1;
-    max-width: 90px; /* Reduced from 100px */
+    max-width: 90px;
     position: relative;
     z-index: 2;
 }
 
 .player-station .card-container {
-    transform: scale(0.9);  /* Further reduced from 1.0 */
-    margin: 2% 1vw 1.5% 1vw; /* Reduced margins */
+    transform: scale(0.9);
+    margin: 2% 1vw 1.5% 1vw;
     flex: 3;
     transition: all 0.3s ease;
 }
@@ -120,7 +120,6 @@
     z-index: 10;
 }
 
-/* Make sure wallet takes less space in player station */
 .player-station .wallet-container {
     flex: 1;
     position: relative;
@@ -132,7 +131,7 @@
     box-shadow: 0 0 15px rgba(62, 113, 168, 0.3);
 }
 
-/* Add holographic effect for active player */
+/* holographic effect for active player */
 .player-station::before {
     content: '';
     position: absolute;
@@ -160,7 +159,6 @@
     }
 }
 
-/* Add small circuit-like details to stations */
 .station::before {
     content: '';
     position: absolute;

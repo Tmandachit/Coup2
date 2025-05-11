@@ -1,4 +1,3 @@
-// Import necessary modules
 const express = require('express');                     
 const cors = require('cors');                           
 const { createServer } = require('http');               
@@ -19,7 +18,7 @@ const io = new Server(server, {
   cors: {
     origin: ['http://localhost:5173'],                // Allowed client origin for socket connections
     methods: ['GET', 'POST'],                         // Allowed HTTP methods
-    credentials: true,                                // Allow credentials (cookies, headers, etc.)
+    credentials: true,
   },
 });
 
@@ -36,7 +35,6 @@ const lobbies = {};
 const games = {};
 const userSockets = {}; 
 
-// Const variables
 const MAX_PLAYERS_PER_LOBBY = 6;
 
 // Helper function to generate a unique 6-digit code
@@ -159,7 +157,6 @@ app.post("/leaderboard", async (req, res) => {
   }
 });
 
-
 // Change password
 app.post("/changepassword", async (req, res) => {
   const { userId, currentPassword, newPassword } = req.body;
@@ -245,7 +242,6 @@ app.get("/profile/:username", async (req, res) => {
   }
 });
 
-
 // Increment Games Played and Winner
 app.post("/update-stats", async (req, res) => {
   const { players, winner } = req.body;
@@ -277,7 +273,6 @@ app.post("/update-stats", async (req, res) => {
     res.status(500).json({ message: "Failed to update stats." });
   }
 });
-
 
 // Create a new lobby
 app.get('/createlobby', (req, res) => {
@@ -495,8 +490,6 @@ io.on('connection', (socket) => {
 
     game.handleDiscard(username, card);
   });
-  
-  
 
   // Handle Action submission
   socket.on('submit-action', ({ playerName, action, target }) => {    

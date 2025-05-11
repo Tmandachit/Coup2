@@ -15,7 +15,7 @@
 
 .joinContainer input,
 .joinContainer button {
-  width: 300px; /* slightly wider */
+  width: 300px;
   max-width: 80%;
   padding: 14px;
   font-size: 1rem;
@@ -43,4 +43,3 @@
   background-color: #3e4e6c;
   box-shadow: 0 0 10px rgba(125, 207, 247, 0.3);
 }
-

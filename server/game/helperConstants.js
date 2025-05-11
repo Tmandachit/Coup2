@@ -36,4 +36,3 @@ const CardNames = {
     Cards: CardNames,
     Actions: ActionNames
   };
-  
